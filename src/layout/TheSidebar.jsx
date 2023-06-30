@@ -20,12 +20,12 @@ const TheSidebar = () => {
   const adminManagement = ["gym", "membership", "facility", "staff", "member"];
   const staffManagement = ["member"];
   const trainerManagement = ["member"];
-  const traineeManagement = ["feedback", "history", "info"];
+  const memberManagement = ["feedback", "history", "info"];
   const management = {
     adminManagement,
     staffManagement,
     trainerManagement,
-    traineeManagement,
+    memberManagement,
   };
 
   console.log(management);

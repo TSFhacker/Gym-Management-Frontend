@@ -65,7 +65,51 @@ const App = () => {
           </Route>
 
           <Route>
-            {["admin", "staff", "trainer", "customer"].map((path) => (
+            <Route path="admin" element={<Dashboard />}>
+              <Route path=":product" element={<TheProducts />} />
+              <Route path="add:product" element={<AddProduct />} />
+              <Route path="update:product">
+                <Route index element={<UpdateProducts />} />
+                <Route path=":productId" element={<ProductUpdate />} />
+              </Route>
+            </Route>
+          </Route>
+
+          <Route>
+            <Route path="staff" element={<Dashboard />}>
+              <Route path=":product" element={<TheProducts />} />
+              <Route path="add:product" element={<AddProduct />} />
+              <Route path="update:product">
+                <Route index element={<UpdateProducts />} />
+                <Route path=":productId" element={<ProductUpdate />} />
+              </Route>
+            </Route>
+          </Route>
+
+          <Route>
+            <Route path="trainer" element={<Dashboard />}>
+              <Route path=":product" element={<TheProducts />} />
+              <Route path="add:product" element={<AddProduct />} />
+              <Route path="update:product">
+                <Route index element={<UpdateProducts />} />
+                <Route path=":productId" element={<ProductUpdate />} />
+              </Route>
+            </Route>
+          </Route>
+
+          <Route>
+            <Route path="member" element={<Dashboard />}>
+              <Route path=":product" element={<TheProducts />} />
+              <Route path="add:product" element={<AddProduct />} />
+              <Route path="update:product">
+                <Route index element={<UpdateProducts />} />
+                <Route path=":productId" element={<ProductUpdate />} />
+              </Route>
+            </Route>
+          </Route>
+
+          {/* <Route>
+            {["admin", "staff", "trainer", "member"].map((path) => (
               <Route path={path} element={<Dashboard />}>
                 <Route path=":product" element={<TheProducts />} />
                 <Route path="add:product" element={<AddProduct />} />
@@ -75,7 +119,7 @@ const App = () => {
                 </Route>
               </Route>
             ))}
-          </Route>
+          </Route> */}
 
           {/* <Route>
             <Route path="staff" element={<Dashboard />}>
