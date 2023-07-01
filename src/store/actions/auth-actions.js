@@ -49,7 +49,6 @@ export const register = (payload) => {
 
 export const logout = (token) => {
   return async (dispatch) => {
-    await api.get("/sanctum/csrf-cookie");
 
     const logout = async () => {
       const response = await api.post("/api/logout", null, {
@@ -63,7 +62,7 @@ export const logout = (token) => {
     };
 
     try {
-      await logout();
+      // await logout();
       dispatch(authActions.logout());
     } catch (error) {
       console.log(error);

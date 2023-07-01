@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
@@ -30,6 +30,11 @@ const containerVariants = {
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const role = useSelector((state) => state.auth.role);
+
+  useEffect(() => {
+    if (role) navigate(role);
+  }, [role]);
   const loading = useSelector((state) => state.ui.loginLoading);
 
   const formik = useFormik({
@@ -43,9 +48,7 @@ const Login = () => {
     }),
     onSubmit: async (values) => {
       try {
-        // await dispatch(login(values));
-        const role = await api.post("/api/users/login", values);
-        navigate(role.data);
+        await dispatch(login(values));
       } catch (error) {
         console.log(error);
       }

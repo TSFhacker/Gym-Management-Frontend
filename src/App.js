@@ -26,6 +26,8 @@ import RegisterRedirect from "./components/auth/RegisterRedirect";
 import DashboardRedirect from "./components/auth/DashboardRedirect";
 import HomeRedirect from "./components/auth/HomeRedirect";
 
+import MemberHistory from "./pages/member/history";
+
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -99,12 +101,18 @@ const App = () => {
 
           <Route>
             <Route path="member" element={<Dashboard />}>
-              <Route path="add:product" element={<AddProduct />} />
-              <Route path=":product" element={<TheProducts />} />
+              <Route path="history" element={<MemberHistory />} />
               <Route path="update:product">
                 <Route index element={<UpdateProducts />} />
                 <Route path=":productId" element={<ProductUpdate />} />
               </Route>
+
+              {/* <Route path="add:product" element={<AddProduct />} />
+              <Route path=":product" element={<TheProducts />} />
+              <Route path="update:product">
+                <Route index element={<UpdateProducts />} />
+                <Route path=":productId" element={<ProductUpdate />} />
+              </Route> */}
             </Route>
           </Route>
 

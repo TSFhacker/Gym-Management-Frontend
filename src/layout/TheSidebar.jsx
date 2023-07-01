@@ -5,13 +5,16 @@ import { MdAddCircle, MdUpdate, MdViewList } from "react-icons/md";
 import { BiLogOutCircle } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/actions/auth-actions";
+import { useNavigate } from "react-router-dom";
 
 const TheSidebar = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
 
   const logoutUser = async () => {
     await dispatch(logout(token));
+    navigate("/");
   };
 
   const { pathname } = useLocation();
@@ -49,7 +52,7 @@ const TheSidebar = () => {
             Dashboard
           </Link>
         )}
-        {management[`${role}Management`].map((subject) => (
+        {management[`${role}Management`]?.map((subject) => (
           <Link
             to={`/${role}/${subject}`}
             className="border-b-2 pb-3 border-gray-500"
