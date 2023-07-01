@@ -39,7 +39,7 @@ const TheSidebar = () => {
           <AiFillDashboard />
         </span>
         <h1 className="uppercase text-3xl tracking-wider font-extrabold text-center">
-          <span className="text-primary">Gym</span>
+          <span className="text-primary">Gym</span> <br></br>
           <span className="text-secondary-200">Management</span>
         </h1>
       </div>
