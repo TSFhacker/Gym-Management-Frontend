@@ -35,6 +35,8 @@ import FacilityUpdate from "./pages/admin/FacilityUpdate";
 import Membership from "./pages/admin/Membership";
 import ListMember from "./pages/staff/ListMember";
 
+import MemberHistory from "./pages/member/history";
+
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -89,7 +91,7 @@ const App = () => {
 
           <Route>
             <Route path="member" element={<Dashboard />}>
-              {/* <Route path="history" element={<MemberHistory />} /> */}
+              <Route path="history" element={<MemberHistory />} />
               <Route path="update:product">
                 <Route index element={<UpdateProducts />} />
                 <Route path=":productId" element={<ProductUpdate />} />
