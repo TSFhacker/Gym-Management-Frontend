@@ -36,6 +36,8 @@ import Membership from "./pages/admin/Membership";
 import ListMember from "./pages/staff/ListMember";
 
 import MemberHistory from "./pages/member/history";
+import MemberInfo from "./pages/member/info";
+import MemberFeedback from "./pages/member/feedback";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -92,11 +94,8 @@ const App = () => {
           <Route>
             <Route path="member" element={<Dashboard />}>
               <Route path="history" element={<MemberHistory />} />
-              <Route path="update:product">
-                <Route index element={<UpdateProducts />} />
-                <Route path=":productId" element={<ProductUpdate />} />
-              </Route>
-
+              <Route path="info" element={<MemberInfo />} />
+              <Route path="feedback" element={<MemberFeedback />} />
               {/* <Route path="add:product" element={<AddProduct />} />
               <Route path=":product" element={<TheProducts />} />
               <Route path="update:product">
