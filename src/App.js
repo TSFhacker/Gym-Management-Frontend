@@ -25,10 +25,14 @@ import LoginRedirect from "./components/auth/LoginRedirect";
 import RegisterRedirect from "./components/auth/RegisterRedirect";
 import DashboardRedirect from "./components/auth/DashboardRedirect";
 import HomeRedirect from "./components/auth/HomeRedirect";
+import Facility from "./pages/admin/Facility";
 
 import MemberHistory from "./pages/member/history";
 import MemberInfo from "./pages/member/info";
 import MemberFeedback from "./pages/member/feedback";
+// import MemberHistory from "./pages/member/history";
+import FacilityUpdate from "./pages/admin/FacilityUpdate";
+import Membership from "./pages/admin/Membership";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -53,11 +57,6 @@ const App = () => {
       <AnimatePresence exitBeforeEnter>
         <Routes location={location} key={location.pathname}>
           <Route element={<HomeRedirect />}>
-            {/* <Route path="/about" element={<About />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/products/:productId" element={<ProductDetail />} /> */}
           </Route>
 
           <Route>
@@ -70,12 +69,9 @@ const App = () => {
 
           <Route>
             <Route path="admin" element={<Dashboard />}>
-              <Route path=":product" element={<TheProducts />} />
-              <Route path="add:product" element={<AddProduct />} />
-              <Route path="update:product">
-                <Route index element={<UpdateProducts />} />
-                <Route path=":productId" element={<ProductUpdate />} />
-              </Route>
+              <Route path="facility" element={<Facility />} />
+              <Route path="facility/:id/update" element={<FacilityUpdate />} />
+              <Route path="membership" element={<Membership />} />
             </Route>
           </Route>
 
@@ -103,9 +99,12 @@ const App = () => {
 
           <Route>
             <Route path="member" element={<Dashboard />}>
-              <Route path="history" element={<MemberHistory />} />
-              <Route path="info" element={<MemberInfo />} />
-              <Route path="feedback" element={<MemberFeedback />} />
+              {/* <Route path="history" element={<MemberHistory />} /> */}
+              <Route path="update:product">
+                <Route index element={<UpdateProducts />} />
+                <Route path=":productId" element={<ProductUpdate />} />
+              </Route>
+
               {/* <Route path="add:product" element={<AddProduct />} />
               <Route path=":product" element={<TheProducts />} />
               <Route path="update:product">
