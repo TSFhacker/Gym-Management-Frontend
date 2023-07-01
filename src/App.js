@@ -99,8 +99,8 @@ const App = () => {
 
           <Route>
             <Route path="member" element={<Dashboard />}>
-              <Route path=":product" element={<TheProducts />} />
               <Route path="add:product" element={<AddProduct />} />
+              <Route path=":product" element={<TheProducts />} />
               <Route path="update:product">
                 <Route index element={<UpdateProducts />} />
                 <Route path=":productId" element={<ProductUpdate />} />
