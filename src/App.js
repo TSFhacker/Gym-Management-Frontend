@@ -99,6 +99,7 @@ const App = () => {
                 element={<MemberhshipDetail />}
               />
               <Route path="gym" element={<ListGym />} />
+              <Route path="member" element={<ListMember />} />
             </Route>
           </Route>
           <Route path="trainer" element={<ListTrainee />} />
