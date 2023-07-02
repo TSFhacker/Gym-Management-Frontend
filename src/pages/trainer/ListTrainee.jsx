@@ -60,9 +60,9 @@ const ListTrainee = (props) => {
     <div className="w-full flex items-center">
       <div className="w-full bg-gray-100">
         <div className="flex items-center justify-between m-4 px-8 py-4 bg-white drop-shadow-lg">
-          <span className="text-4xl text-primary mr-6">
+          <span className="text-sm text-primary mr-6">
             <button
-              className="px-4 py-2 bg-gray-400 rounded-md flex items-center shadow-lg mt-12"
+              className="px-4 py-2 bg-gray-400 rounded-md flex items-center shadow-lg"
               onClick={logoutUser}
             >
               <span className="inline-flex mr-3 font-bold">
@@ -74,12 +74,7 @@ const ListTrainee = (props) => {
           <h2 className="uppercase text-3xl tracking-widest font-semibold">
             Trainee List
           </h2>
-          <Link to="#">
-            <IoIosAddCircle
-              size={40}
-              className="text-green-500 hover:text-green-600 transfrom transition-all duration-200 active:text-green-700 active:scale-19"
-            />
-          </Link>
+          <div></div>
         </div>
         <div className="px-[16px] mt-[20px]">
           <div className="overflow-auto">
