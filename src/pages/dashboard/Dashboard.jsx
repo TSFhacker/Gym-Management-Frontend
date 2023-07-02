@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import React from "react";
+import { Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 import DashboardNavbar from "../../components/dashboard/DashboardNavbar";
@@ -8,7 +8,6 @@ import DashboardContent from "../../components/dashboard/DashboardContent";
 
 const Dashboard = (props) => {
   const { pathname } = useLocation();
-  const navigate = useNavigate();
 
   return (
     <div className="w-full flex">
@@ -17,7 +16,7 @@ const Dashboard = (props) => {
       </div>
       <div className="w-full bg-gray-200">
         <DashboardNavbar />
-        <div>
+        <div className="h-full">
           {pathname === "/admin" && <DashboardContent />}
           <Outlet />
         </div>
