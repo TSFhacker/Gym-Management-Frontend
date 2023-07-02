@@ -1,57 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
-import axios from "axios";
 import * as Yup from "yup";
 import { HiChevronDoubleLeft } from "react-icons/hi";
-import TheSidebar from "../../layout/TheSidebar";
-import DashboardNavbar from "../../components/dashboard/DashboardNavbar";
+import api from "../../../utils/api";
+import swal from "sweetalert";
 
-const FacilityUpdate = () => {
+const FacilityCreate = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [facility, setFacility] = useState({});
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/v1/facility/1")
-      .then(res => {
-        setFacility(res.data[0])
+    api.get(`/api/v1/facility/${id}`)
+      .then((res) => {
+        setFacility(res.data[0]);
       })
-      .catch(error => {})
-  }, []);
+      .catch((error) => {});
+  }, [id]);
 
   const formik = useFormik({
     initialValues: {
       facilityName: facility.facilityName,
-      type: facility.description,
-      dateOfPurchase: facility.price,
-      warrantyDate: facility.category,
-      origin: facility.brand,
-      status: facility.shipping,
+      type: facility.type,
+      dateOfPurchase: facility.dateOfPurchase?.slice(0, 10),
+      warrantyDate: facility.warrantyDate?.slice(0, 10),
+      origin: facility.origin,
+      quantity: facility.quantity,
+      status: facility.status,
     },
     validationSchema: Yup.object({
       facilityName: Yup.string().required("Required"),
       type: Yup.string().required("Required"),
-      dateOfPurchase: Yup.number().required("Required"),
+      dateOfPurchase: Yup.string().required("Required"),
       warrantyDate: Yup.string().required("Required"),
       origin: Yup.string().required("Required"),
       status: Yup.string().required("Required"),
+      quantity: Yup.string().required("Required"),
     }),
     enableReinitialize: true,
 
     onSubmit: async (values) => {
-      
+      api.post(`/api/v1/facility/add`, values)
+        .then((res) => {
+          if(res.status === 201) {
+            swal({
+              title: "Success!",
+              timer: 2000,
+              text: "Facility created successfully!",
+              icon: "success",
+              buttons: false
+            }).then(() => {
+              navigate("/admin/facility")
+            })
+          }
+        });
     },
   });
 
   return (
     <div className="w-full flex">
-      <div className="w-[300px] h-screen top-0 left-0 sticky bg-gradient-to-tr from-green-200 to-primary">
-        <TheSidebar />
-      </div>
       <div className="w-full bg-gray-100">
-        <DashboardNavbar />
-        <div className="px-[50px] mt-[20px]">
+          <div className="px-[50px] mt-[20px]">
           <div>
             <div className="mx-4">
               <button
@@ -72,7 +82,7 @@ const FacilityUpdate = () => {
                     <div className="shrink-0">
                       <img
                         className="h-24  object-cover rounded-md"
-                        src="https://blog.nasm.org/hubfs/cleangym%20%281%29.jpg"
+                        src="https://archive.org/download/no-photo-available/no-photo-available.png"
                         alt="thumbnail"
                       />
                     </div>
@@ -105,11 +115,12 @@ const FacilityUpdate = () => {
                       value={formik.values.facilityName}
                       className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     ></input>
-                    {formik.touched.facilityName && formik.errors.facilityName && (
-                      <p className="text-xs font-semibold text-red-500">
-                        {formik.errors.facilityName}
-                      </p>
-                    )}
+                    {formik.touched.facilityName &&
+                      formik.errors.facilityName && (
+                        <p className="text-xs font-semibold text-red-500">
+                          {formik.errors.facilityName}
+                        </p>
+                      )}
                   </div>
                   <div className="grid grid-cols-3 gap-4">
                     {/* type input */}
@@ -135,7 +146,6 @@ const FacilityUpdate = () => {
                         </p>
                       )}
                     </div>
-
                     {/* date input */}
                     <div className="flex flex-col space-y-1">
                       <label
@@ -150,7 +160,7 @@ const FacilityUpdate = () => {
                         id="purchase"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.name}
+                        value={formik.values.dateOfPurchase}
                         className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                       {formik.touched.dateOfPurchase &&
@@ -160,7 +170,6 @@ const FacilityUpdate = () => {
                           </p>
                         )}
                     </div>
-
                     {/* date input */}
                     <div className="flex flex-col space-y-1">
                       <label
@@ -209,6 +218,29 @@ const FacilityUpdate = () => {
                         </p>
                       )}
                     </div>
+                    {/* orgin input */}
+                    <div className="flex flex-col space-y-1 mb-3">
+                      <label
+                        htmlFor="quantity"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Quantity
+                      </label>
+                      <input
+                        type="text"
+                        name="quantity"
+                        id="quantity"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.quantity}
+                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      ></input>
+                      {formik.touched.quantity && formik.errors.quantity && (
+                        <p className="text-xs font-semibold text-red-500">
+                          {formik.errors.quantity}
+                        </p>
+                      )}
+                    </div>
 
                     {/* status input */}
                     <div className="flex flex-col space-y-1 mb-8">
@@ -239,7 +271,7 @@ const FacilityUpdate = () => {
                     type="submit"
                     className="float-right bg-blue-600 text-white py-2 px-5 rounded-md mt-5 hover:bg-blue-500"
                   >
-                    Update Facility
+                    Create
                   </button>
                 </form>
               </div>
@@ -251,4 +283,4 @@ const FacilityUpdate = () => {
   );
 };
 
-export default FacilityUpdate;
+export default FacilityCreate;

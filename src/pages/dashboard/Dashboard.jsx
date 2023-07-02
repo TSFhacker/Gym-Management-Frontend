@@ -10,7 +10,6 @@ const Dashboard = (props) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  console.log(props);
   return (
     <div className="w-full flex">
       <div className="w-[300px] h-screen top-0 left-0 sticky bg-gradient-to-tr from-green-200 to-primary">
