@@ -46,7 +46,6 @@ import Membership from "./pages/admin/membership/Membership";
 import MembershipCreate from "./pages/admin/membership/MembershipCreate";
 import MemberhshipDetail from "./pages/admin/membership/MemberhshipDetail";
 
-
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -86,22 +85,20 @@ const App = () => {
               <Route path="facility/create" element={<FacilityCreate />} />
               <Route path="membership" element={<Membership />} />
               <Route path="membership/create" element={<MembershipCreate />} />
-              <Route path="membership/:id/detail" element={<MemberhshipDetail />} />
+              <Route
+                path="membership/:id/detail"
+                element={<MemberhshipDetail />}
+              />
             </Route>
           </Route>
-          <Route path="staff" element={<ListMember />} />
           <Route path="trainer" element={<ListTrainee />} />
 
-          {/* <Route>
-            <Route path="trainer" element={<Dashboard />}>
-              <Route path=":product" element={<TheProducts />} />
-              <Route path="add:product" element={<AddProduct />} />
-              <Route path="update:product">
-                <Route index element={<UpdateProducts />} />
-                <Route path=":productId" element={<ProductUpdate />} />
-              </Route>
+          <Route>
+            <Route path="staff" element={<Dashboard />}>
+              <Route path="member" element={<ListMember />} />
+              <Route path="membership" element={<Membership />} />
             </Route>
-          </Route> */}
+          </Route>
 
           <Route>
             <Route path="member" element={<Dashboard />}>

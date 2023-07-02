@@ -21,7 +21,7 @@ const TheSidebar = () => {
   const role = pathname.split("/")[1];
 
   const adminManagement = ["gym", "membership", "facility", "staff", "member"];
-  const staffManagement = ["member"];
+  const staffManagement = ["member", "membership"];
   const trainerManagement = ["member"];
   const memberManagement = ["feedback", "history", "info"];
   const management = {

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import { FiEye } from "react-icons/fi";
@@ -9,6 +9,8 @@ import api from "../../../utils/api";
 
 const Membership = () => {
   const [memberships, setMemberships] = useState([]);
+  const { pathname } = useLocation();
+  const role = pathname.split("/")[1];
 
   useEffect(() => {
     api
@@ -31,6 +33,8 @@ const Membership = () => {
     "Class",
     "Action",
   ];
+
+  role === "staff" && headerCells.pop();
 
   const handleDelete = (id) => {
     swal({
@@ -110,28 +114,32 @@ const Membership = () => {
                     <td className="p-[15px] text-gray-800">
                       {membership.trainingClass}
                     </td>
-                    <td className="p-[15px]">
-                      <div className="flex gap-2 items-center justify-center">
-                        <div
-                          className="bg-red-600  cursor-pointer p-[8px] inline-block rounded"
-                          onClick={() => handleDelete(membership.membershipId)}
-                        >
-                          <FiTrash2
-                            className="text-white cursor-pointer"
-                            size={14}
-                          />
+                    {role === "admin" && (
+                      <td className="p-[15px]">
+                        <div className="flex gap-2 items-center justify-center">
+                          <div
+                            className="bg-red-600  cursor-pointer p-[8px] inline-block rounded"
+                            onClick={() =>
+                              handleDelete(membership.membershipId)
+                            }
+                          >
+                            <FiTrash2
+                              className="text-white cursor-pointer"
+                              size={14}
+                            />
+                          </div>
+                          <Link
+                            to={`/admin/membership/${membership.membershipId}/detail`}
+                            className="bg-green-600  cursor-pointer p-[8px] inline-block rounded"
+                          >
+                            <FiEye
+                              className="text-white cursor-pointer"
+                              size={14}
+                            />
+                          </Link>
                         </div>
-                        <Link
-                          to={`/admin/membership/${membership.membershipId}/detail`}
-                          className="bg-green-600  cursor-pointer p-[8px] inline-block rounded"
-                        >
-                          <FiEye
-                            className="text-white cursor-pointer"
-                            size={14}
-                          />
-                        </Link>
-                      </div>
-                    </td>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
