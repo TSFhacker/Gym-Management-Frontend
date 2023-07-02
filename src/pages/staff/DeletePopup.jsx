@@ -4,10 +4,31 @@ function DeletePopup({
   setOpenDeletePopup,
   memberList,
   setMemberList,
+  setMemberList2,
   deletedMemberId,
 }) {
   const handleDelete = () => {
+    fetch(`http://localhost:8080/api/members/${deletedMemberId}`, {
+      method: `DELETE`,
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+
+    const deletedIndex = memberList.findIndex(
+      (e) => e.memberId === deletedMemberId
+    );
     setOpenDeletePopup(false);
+    setMemberList([
+      ...memberList.slice(0, deletedIndex),
+      ...memberList.slice(deletedIndex + 1),
+    ]);
+    setMemberList2([
+      ...memberList.slice(0, deletedIndex),
+      ...memberList.slice(deletedIndex + 1),
+    ]);
   };
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-gray-700/[0.8]">

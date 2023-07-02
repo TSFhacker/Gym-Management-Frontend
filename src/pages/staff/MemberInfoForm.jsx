@@ -8,6 +8,7 @@ const MemberInfoForm = ({
   member,
   memberList,
   setMemberList,
+  setMemberList2,
 }) => {
   console.log(member);
   const [name, setName] = useState(member ? member.name : "");
@@ -81,6 +82,14 @@ const MemberInfoForm = ({
             )
           )
         : setMemberList([...memberList, newMember]);
+
+      member
+        ? setMemberList2(
+            memberList.map((e) =>
+              e.memberId === member.memberId ? newMember : e
+            )
+          )
+        : setMemberList2([...memberList, newMember]);
     }
   };
   return (

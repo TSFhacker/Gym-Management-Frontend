@@ -157,6 +157,7 @@ const ListMember = (props) => {
           setUpdatedMemberId={setUpdatedMemberId}
           member={memberList.find((e) => e.memberId === updatedMemberId)}
           setMemberList={setMemberList}
+          setMemberList2={setMemberList2}
           memberList={memberList}
         />
       )}
@@ -165,6 +166,7 @@ const ListMember = (props) => {
           setOpenModal={setOpenModal}
           memberList={memberList}
           setMemberList={setMemberList}
+          setMemberList2={setMemberList2}
         />
       )}
 
@@ -173,6 +175,7 @@ const ListMember = (props) => {
           setOpenDeletePopup={setOpenDeletePopup}
           memberList={memberList}
           setMemberList={setMemberList}
+          setMemberList2={setMemberList2}
           deletedMemberId={deletedMemberId}
         />
       )}
