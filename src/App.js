@@ -29,6 +29,7 @@ import HomeRedirect from "./components/auth/HomeRedirect";
 // import MemberHistory from "./pages/member/history";
 import ListMember from "./pages/staff/ListMember";
 import ListTrainee from "./pages/trainer/ListTrainee";
+import ListFeedback from "./pages/staff/ListFeedBack";
 
 import MemberHistory from "./pages/member/history";
 import MemberInfo from "./pages/member/info";
@@ -97,6 +98,7 @@ const App = () => {
             <Route path="staff" element={<Dashboard />}>
               <Route path="member" element={<ListMember />} />
               <Route path="membership" element={<Membership />} />
+              <Route path="feedback" element={<ListFeedback />} />
             </Route>
           </Route>
 
