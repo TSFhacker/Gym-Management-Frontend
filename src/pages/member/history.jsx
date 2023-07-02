@@ -15,7 +15,6 @@ const MemberHistory = (props) => {
   const [histories, setHistories] = useState([]);
   const [trainers, setTrainers] = useState([]);
 
-  console.log(histories);
   const userId = useSelector((state) => state.auth.id);
 
   const { pathname } = useLocation();

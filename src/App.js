@@ -34,6 +34,7 @@ import ListFeedback from "./pages/staff/ListFeedBack";
 import MemberHistory from "./pages/member/history";
 import MemberInfo from "./pages/member/info";
 import MemberFeedback from "./pages/member/feedback";
+import AddMemberFeedback from "./pages/member/add-feedback";
 
 // import MemberHistory from "./pages/member/history";
 // import MemberInfo from "./pages/member/info";
@@ -104,12 +105,10 @@ const App = () => {
 
           <Route>
             <Route path="member" element={<Dashboard />}>
-              {/* <Route path="history" element={<MemberHistory />} /> */}
-              <Route path="update:product">
-                <Route index element={<UpdateProducts />} />
-                <Route path=":productId" element={<ProductUpdate />} />
-              </Route>
-
+              <Route path="history" element={<MemberHistory />} />
+              <Route path="info" element={<MemberInfo />} />
+              <Route path="feedback" element={<MemberFeedback />} />
+              <Route path="feedback/add" element={<AddMemberFeedback />} />
               {/* <Route path="add:product" element={<AddProduct />} />
               <Route path=":product" element={<TheProducts />} />
               <Route path="update:product">
