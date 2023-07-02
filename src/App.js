@@ -50,6 +50,7 @@ import MemberhshipDetail from "./pages/admin/membership/MemberhshipDetail";
 import Staff from "./pages/admin/staff/Staff";
 import StaffCreate from "./pages/admin/staff/StaffCreate";
 import StaffEdit from "./pages/admin/staff/StaffEdit";
+import ListGym from "./pages/admin/gym/ListGym";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -97,6 +98,7 @@ const App = () => {
                 path="membership/:id/detail"
                 element={<MemberhshipDetail />}
               />
+              <Route path="gym" element={<ListGym />} />
             </Route>
           </Route>
           <Route path="trainer" element={<ListTrainee />} />
