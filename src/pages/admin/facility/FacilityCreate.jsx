@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React  from "react";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { HiChevronDoubleLeft } from "react-icons/hi";
@@ -7,27 +7,17 @@ import api from "../../../utils/api";
 import swal from "sweetalert";
 
 const FacilityCreate = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  const [facility, setFacility] = useState({});
-
-  useEffect(() => {
-    api.get(`/api/v1/facility/${id}`)
-      .then((res) => {
-        setFacility(res.data[0]);
-      })
-      .catch((error) => {});
-  }, [id]);
 
   const formik = useFormik({
     initialValues: {
-      facilityName: facility.facilityName,
-      type: facility.type,
-      dateOfPurchase: facility.dateOfPurchase?.slice(0, 10),
-      warrantyDate: facility.warrantyDate?.slice(0, 10),
-      origin: facility.origin,
-      quantity: facility.quantity,
-      status: facility.status,
+      facilityName: "",
+      type: "",
+      dateOfPurchase: "",
+      warrantyDate: "",
+      origin: "",
+      quantity: "",
+      status:"",
     },
     validationSchema: Yup.object({
       facilityName: Yup.string().required("Required"),
@@ -59,7 +49,7 @@ const FacilityCreate = () => {
   });
 
   return (
-    <div className="w-full flex">
+    <div className="w-full flex h-full">
       <div className="w-full bg-gray-100">
           <div className="px-[50px] mt-[20px]">
           <div>

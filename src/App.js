@@ -42,8 +42,10 @@ import MemberFeedback from "./pages/member/feedback";
 import Facility from "./pages/admin/facility/Facility";
 import FacilityUpdate from "./pages/admin/facility/FacilityUpdate";
 import FacilityCreate from "./pages/admin/facility/FacilityCreate";
+import Membership from "./pages/admin/membership/Membership";
+import MembershipCreate from "./pages/admin/membership/MembershipCreate";
+import MemberhshipDetail from "./pages/admin/membership/MemberhshipDetail";
 
-import Membership from "./pages/admin/Membership";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -83,6 +85,8 @@ const App = () => {
               <Route path="facility/:id/update" element={<FacilityUpdate />} />
               <Route path="facility/create" element={<FacilityCreate />} />
               <Route path="membership" element={<Membership />} />
+              <Route path="membership/create" element={<MembershipCreate />} />
+              <Route path="membership/:id/detail" element={<MemberhshipDetail />} />
             </Route>
           </Route>
           <Route path="staff" element={<ListMember />} />
