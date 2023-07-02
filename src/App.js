@@ -25,21 +25,14 @@ import LoginRedirect from "./components/auth/LoginRedirect";
 import RegisterRedirect from "./components/auth/RegisterRedirect";
 import DashboardRedirect from "./components/auth/DashboardRedirect";
 import HomeRedirect from "./components/auth/HomeRedirect";
-import Facility from "./pages/admin/Facility";
 
-import MemberHistory from "./pages/member/history";
-import MemberInfo from "./pages/member/info";
-import MemberFeedback from "./pages/member/feedback";
 // import MemberHistory from "./pages/member/history";
-import FacilityUpdate from "./pages/admin/FacilityUpdate";
-import Membership from "./pages/admin/Membership";
 import ListMember from "./pages/staff/ListMember";
 import Facility from "./pages/admin/Facility";
 
 import MemberHistory from "./pages/member/history";
 import MemberInfo from "./pages/member/info";
 import MemberFeedback from "./pages/member/feedback";
-// import MemberHistory from "./pages/member/history";
 import FacilityUpdate from "./pages/admin/FacilityUpdate";
 import Membership from "./pages/admin/Membership";
 
