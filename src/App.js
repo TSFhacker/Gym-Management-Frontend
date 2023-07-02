@@ -28,12 +28,20 @@ import HomeRedirect from "./components/auth/HomeRedirect";
 
 // import MemberHistory from "./pages/member/history";
 import ListMember from "./pages/staff/ListMember";
-import Facility from "./pages/admin/Facility";
 
 import MemberHistory from "./pages/member/history";
 import MemberInfo from "./pages/member/info";
 import MemberFeedback from "./pages/member/feedback";
-import FacilityUpdate from "./pages/admin/FacilityUpdate";
+
+// import MemberHistory from "./pages/member/history";
+// import MemberInfo from "./pages/member/info";
+// import MemberFeedback from "./pages/member/feedback";
+// import MemberHistory from "./pages/member/history";
+
+import Facility from "./pages/admin/facility/Facility";
+import FacilityUpdate from "./pages/admin/facility/FacilityUpdate";
+import FacilityCreate from "./pages/admin/facility/FacilityCreate";
+
 import Membership from "./pages/admin/Membership";
 
 const App = () => {
@@ -72,6 +80,7 @@ const App = () => {
             <Route path="admin" element={<Dashboard />}>
               <Route path="facility" element={<Facility />} />
               <Route path="facility/:id/update" element={<FacilityUpdate />} />
+              <Route path="facility/create" element={<FacilityCreate />} />
               <Route path="membership" element={<Membership />} />
             </Route>
           </Route>

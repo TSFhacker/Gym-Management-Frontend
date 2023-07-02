@@ -31,7 +31,6 @@ const TheSidebar = () => {
     memberManagement,
   };
 
-  console.log(management);
   return (
     <div className="flex flex-col h-full px-6">
       <div className="mb-12 mt-8 flex flex-col justify-center items-center">
