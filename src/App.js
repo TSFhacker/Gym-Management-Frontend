@@ -28,6 +28,7 @@ import HomeRedirect from "./components/auth/HomeRedirect";
 
 // import MemberHistory from "./pages/member/history";
 import ListMember from "./pages/staff/ListMember";
+import ListTrainee from "./pages/trainer/ListTrainee";
 
 import MemberHistory from "./pages/member/history";
 import MemberInfo from "./pages/member/info";
@@ -85,8 +86,9 @@ const App = () => {
             </Route>
           </Route>
           <Route path="staff" element={<ListMember />} />
+          <Route path="trainer" element={<ListTrainee />} />
 
-          <Route>
+          {/* <Route>
             <Route path="trainer" element={<Dashboard />}>
               <Route path=":product" element={<TheProducts />} />
               <Route path="add:product" element={<AddProduct />} />
@@ -95,7 +97,7 @@ const App = () => {
                 <Route path=":productId" element={<ProductUpdate />} />
               </Route>
             </Route>
-          </Route>
+          </Route> */}
 
           <Route>
             <Route path="member" element={<Dashboard />}>

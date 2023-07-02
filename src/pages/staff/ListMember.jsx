@@ -28,6 +28,20 @@ const ListMember = (props) => {
     setMemberList2(result);
   };
 
+  const headerCells = [
+    "ID",
+    "Picture",
+    "Name",
+    "Date of birth",
+    "Gender",
+    "Email",
+    "Phone Number",
+    "Job",
+    "Occupation",
+    "Member type",
+    "Action",
+  ];
+
   const handleSearch = (e) => {
     setSearchInput(e.target.value);
 
@@ -63,54 +77,78 @@ const ListMember = (props) => {
           className="h-16 w-16 text-5xl text-green-500 hover:text-green-600 transfrom transition-all duration-200 active:text-green-700 active:scale-95 cursor-pointer"
         />
       </div>
-      <div className="flex gap-4 w-full flex-wrap text-center px-16 bg-[#9a9a9a] min-h-screen">
-        {memberList2.map((member) => (
-          <div className="flex flex-col space-x-6 border border-white rounded-lg shadow-lg p-4 w-[35rem] my-8 bg-[#fff]">
-            <div className="w-full transform overflow-hidden cursor-pointer">
-              <img
-                className="w-[300px] h-[200px] mx-auto object-contain rounded transform hover:scale-105 transition-all duration-300"
-                src={"/default-avatar.png"}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <h2 className="font-semibold text-lg tracking-widest my-4">
-                {member.name}
-              </h2>
-              <p className="text-gray-500">
-                Age: {member.age} - Gender: {member.gender}
-              </p>
-              <p className="text-gray-500">Job: {member.job}</p>
-              <p className="text-gray-500">Occupation: {member.occupation}</p>
-              <p className="text-gray-500">
-                Birthday: {new Date(member.birthday).toLocaleDateString()}
-              </p>
-              <p className="text-gray-500">Type: {member.memberType}</p>
-              <p className="text-gray-500">Email: {member.email}</p>
-              <p className="text-gray-500">Email: {member.phoneNumber}</p>
-              <div className="w-full text-center mt-4">
-                <button
-                  className="bg-orange-400 text-white px-4 py-1 rounded-md shadow-md hover:bg-orange-500 transition-all duration-200 transform active:scale-95 mr-8"
-                  onClick={(e) => {
-                    setOpenModal(true);
-                    setUpdatedMemberId(member.memberId);
-                    console.log(member.memberId);
-                  }}
+
+      <div className="px-[16px] mt-[20px]">
+        <div className="overflow-auto">
+          <table className="w-full">
+            <thead className="bg-teal-500">
+              <tr className="header">
+                {headerCells.map((headerCell, index) => (
+                  <th className="text-white text-left" key={index}>
+                    <div className="px-[15px]">{headerCell}</div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {memberList2?.map((member) => (
+                <tr
+                  key={member.memberId}
+                  className="bg-[#fafafa] hover:bg-gray-100"
+                  style={{ border: "1px solid rgba(0,0,0,0.1)" }}
                 >
-                  <AiFillEdit className="inline-block" />
-                </button>
-                <button
-                  className="bg-red-600 text-white px-4 py-1 rounded-md shadow-md hover:bg-red-700 transition-all duration-200 transform active:scale-95"
-                  onClick={() => {
-                    setOpenDeletePopup(true);
-                    setDeletedMemberId(member.memberId);
-                  }}
-                >
-                  <BsTrashFill className="inline-block" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+                  <td className="p-[15px]">{member.memberId}</td>
+                  <td className="p-[15px]">
+                    <img
+                      src="/default-avatar.png"
+                      alt="default"
+                      className="w-[100px] h-auto rounded-md"
+                    />
+                  </td>
+                  <td className="p-[15px] font-semibold">{member.name}</td>
+                  <td className="p-[15px text-gray-500">
+                    {new Date(member.birthday).toLocaleDateString()}
+                  </td>
+                  <td className="p-[15px] text-gray-500">{member.gender}</td>
+                  <td className="p-[15px] text-gray-500">{member.email}</td>
+                  <td className="p-[15px] text-gray-500">
+                    {member.phoneNumber}
+                  </td>
+                  <td className="p-[15px] text-gray-500">{member.job}</td>
+                  <td className="p-[15px] text-gray-500">
+                    {member.occupation}
+                  </td>
+                  <td className="p-[15px] text-gray-500">
+                    {member.memberType}
+                  </td>
+                  <td className="p-[15px]">
+                    <div className="flex gap-2 items-center">
+                      <button
+                        className="bg-orange-400 text-white px-4 py-1 rounded-md shadow-md hover:bg-orange-500 transition-all duration-200 transform active:scale-95 mr-8"
+                        onClick={(e) => {
+                          setOpenModal(true);
+                          setUpdatedMemberId(member.memberId);
+                          console.log(member.memberId);
+                        }}
+                      >
+                        <AiFillEdit className="inline-block" />
+                      </button>
+                      <button
+                        className="bg-red-600 text-white px-4 py-1 rounded-md shadow-md hover:bg-red-700 transition-all duration-200 transform active:scale-95"
+                        onClick={() => {
+                          setOpenDeletePopup(true);
+                          setDeletedMemberId(member.memberId);
+                        }}
+                      >
+                        <BsTrashFill className="inline-block" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {openModal && updatedMemberId && (
