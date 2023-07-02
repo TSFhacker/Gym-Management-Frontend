@@ -47,6 +47,9 @@ import FacilityCreate from "./pages/admin/facility/FacilityCreate";
 import Membership from "./pages/admin/membership/Membership";
 import MembershipCreate from "./pages/admin/membership/MembershipCreate";
 import MemberhshipDetail from "./pages/admin/membership/MemberhshipDetail";
+import Staff from "./pages/admin/staff/Staff";
+import StaffCreate from "./pages/admin/staff/StaffCreate";
+import StaffEdit from "./pages/admin/staff/StaffEdit";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -87,6 +90,9 @@ const App = () => {
               <Route path="facility/create" element={<FacilityCreate />} />
               <Route path="membership" element={<Membership />} />
               <Route path="membership/create" element={<MembershipCreate />} />
+              <Route path="staff" element={<Staff />} />
+              <Route path="staff/create" element={<StaffCreate />} />
+              <Route path="staff/:id/update" element={<StaffEdit />} />
               <Route
                 path="membership/:id/detail"
                 element={<MemberhshipDetail />}
