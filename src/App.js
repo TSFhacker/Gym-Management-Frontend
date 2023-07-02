@@ -25,12 +25,14 @@ import LoginRedirect from "./components/auth/LoginRedirect";
 import RegisterRedirect from "./components/auth/RegisterRedirect";
 import DashboardRedirect from "./components/auth/DashboardRedirect";
 import HomeRedirect from "./components/auth/HomeRedirect";
+
+// import MemberHistory from "./pages/member/history";
+import ListMember from "./pages/staff/ListMember";
 import Facility from "./pages/admin/Facility";
 
 import MemberHistory from "./pages/member/history";
 import MemberInfo from "./pages/member/info";
 import MemberFeedback from "./pages/member/feedback";
-// import MemberHistory from "./pages/member/history";
 import FacilityUpdate from "./pages/admin/FacilityUpdate";
 import Membership from "./pages/admin/Membership";
 
@@ -56,8 +58,7 @@ const App = () => {
       {/* {!isAdmin && <MainNavigation />} */}
       <AnimatePresence exitBeforeEnter>
         <Routes location={location} key={location.pathname}>
-          <Route element={<HomeRedirect />}>
-          </Route>
+          <Route element={<HomeRedirect />}></Route>
 
           <Route>
             <Route path="/" element={<Login />} />
@@ -74,17 +75,7 @@ const App = () => {
               <Route path="membership" element={<Membership />} />
             </Route>
           </Route>
-
-          <Route>
-            <Route path="staff" element={<Dashboard />}>
-              <Route path=":product" element={<TheProducts />} />
-              <Route path="add:product" element={<AddProduct />} />
-              <Route path="update:product">
-                <Route index element={<UpdateProducts />} />
-                <Route path=":productId" element={<ProductUpdate />} />
-              </Route>
-            </Route>
-          </Route>
+          <Route path="staff" element={<ListMember />} />
 
           <Route>
             <Route path="trainer" element={<Dashboard />}>
@@ -141,7 +132,6 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
-      {!isAdmin && <Footer />}
     </>
   );
 };
