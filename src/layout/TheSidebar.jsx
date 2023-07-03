@@ -23,7 +23,7 @@ const TheSidebar = () => {
   const adminManagement = ["gym", "membership", "facility", "staff", "member"];
   const staffManagement = ["member", "membership", "feedback"];
   const trainerManagement = ["member"];
-  const memberManagement = ["feedback", "history", "info"];
+  const memberManagement = ["feedback", "history", "info", "membership"];
   const management = {
     adminManagement,
     staffManagement,
