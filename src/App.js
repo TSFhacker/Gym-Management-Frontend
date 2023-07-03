@@ -52,6 +52,8 @@ import Staff from "./pages/admin/staff/Staff";
 import StaffCreate from "./pages/admin/staff/StaffCreate";
 import StaffEdit from "./pages/admin/staff/StaffEdit";
 import ListGym from "./pages/admin/gym/ListGym";
+import GymUpdate from "./pages/admin/gym/GymUpdate";
+import GymCreate from "./pages/admin/gym/GymCreate";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -100,7 +102,8 @@ const App = () => {
                 element={<MemberhshipDetail />}
               />
               <Route path="gym" element={<ListGym />} />
-              <Route path="member" element={<ListMember />} />
+              <Route path="gym/:id/update" element={<GymUpdate />} />
+              <Route path="gym/create" element={<GymCreate />} />
             </Route>
           </Route>
           <Route path="trainer" element={<ListTrainee />} />
