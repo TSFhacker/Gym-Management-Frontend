@@ -87,10 +87,6 @@ const App = () => {
             <Route path="/" element={<Login />} />
           </Route>
 
-          <Route element={<RegisterRedirect />}>
-            <Route path="/register" element={<Register />} />
-          </Route>
-
           <Route>
             <Route path="admin/" element={<Dashboard />}>
               <Route path="facility" element={<Facility />} />

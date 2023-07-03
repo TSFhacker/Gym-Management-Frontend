@@ -96,7 +96,9 @@ const ListGym = () => {
               setGyms(newGyms);
               setSearchGyms(newGyms);
               if (newGyms.length > 7) {
-                setPaginated(newGyms.slice((currentPage - 1) * 7, currentPage * 7));
+                setPaginated(
+                  newGyms.slice((currentPage - 1) * 7, currentPage * 7)
+                );
               } else {
                 setPaginated(newGyms);
               }
@@ -142,7 +144,9 @@ const ListGym = () => {
                       key={gym.id}
                       className="cursor-pointer bg-[#fafafa] text-left hover:bg-gray-100"
                       style={{ border: "1px solid rgba(0,0,0,0.1)" }}
-                      onClick={() => navigate(`/admin/gym/${gym.yogaClass.id}/detail`)}
+                      onClick={() =>
+                        navigate(`/admin/gym/${gym.yogaClass.id}/detail`)
+                      }
                     >
                       <td className="p-3">{gym.yogaClass.id}</td>
                       <td className="p-3">{gym.yogaClass.name}</td>
@@ -179,19 +183,17 @@ const ListGym = () => {
                             />
                           </div>
                           <div
-                              className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                navigate(
-                                  `/admin/gym/${gym.yogaClass.id}/update`
-                                );
-                              }}
-                            >
-                              <FiEdit
-                                className="text-white cursor-pointer"
-                                size={14}
-                              />
-                            </div>
+                            className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/admin/gym/${gym.yogaClass.id}/update`);
+                            }}
+                          >
+                            <FiEdit
+                              className="text-white cursor-pointer"
+                              size={14}
+                            />
+                          </div>
                         </div>
                       </td>
                     </tr>

@@ -120,10 +120,12 @@ const Membership = () => {
             <SearchBox handleSearch={debounceSearchHandler} />
           </div>
           <Link to="create">
-            <IoIosAddCircle
-              size={40}
-              className="text-green-500 hover:text-green-600 transfrom transition-all duration-200 active:text-green-1000 active:scale-19"
-            />
+            {role === "admin" && (
+              <IoIosAddCircle
+                size={40}
+                className="text-green-500 hover:text-green-600 transfrom transition-all duration-200 active:text-green-700 active:scale-19"
+              />
+            )}
           </Link>
         </div>
         <div className="px-[16px] mt-[20px]">
