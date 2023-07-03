@@ -104,6 +104,7 @@ const App = () => {
               <Route path="gym" element={<ListGym />} />
               <Route path="gym/:id/update" element={<GymUpdate />} />
               <Route path="gym/create" element={<GymCreate />} />
+              <Route path="member" element={<ListMember />} />
             </Route>
           </Route>
           <Route path="trainer" element={<ListTrainee />} />
