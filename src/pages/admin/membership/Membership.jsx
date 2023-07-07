@@ -1,23 +1,58 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
 import { FiTrash2 } from "react-icons/fi";
-import { FiEye } from "react-icons/fi";
-import { AiOutlineUnorderedList } from "react-icons/ai";
+import { FiEdit } from "react-icons/fi";
 import { IoIosAddCircle } from "react-icons/io";
 import swal from "sweetalert";
 import api from "../../../utils/api";
+import { Pagination } from "antd";
+import SearchBox from "../../../components/admin/SearchBox";
+import { debounce } from "lodash";
+import NotFound from "../../../components/admin/NotFound";
 
 const Membership = () => {
   const [memberships, setMemberships] = useState([]);
+  const [paginated, setPaginated] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const { pathname } = useLocation();
+  const [searchMemberships, setSearchMemberships] = useState([])
+
+  const navigate = useNavigate();
   const role = pathname.split("/")[1];
+  const handleChangePage = (page) => {
+    setCurrentPage(page);
+    setPaginated(memberships.slice((page - 1) * 10, page * 10));
+  };
+
+  const searchHandler = (e) => {
+    const searchValue = e.target.value
+    const foundMemberships = memberships.filter((membership) =>
+    membership.membershipName?.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setSearchMemberships(foundMemberships)
+    if(foundMemberships.length > 10) {
+      setPaginated(foundMemberships.slice(0,10))
+    } else {
+      setPaginated(foundMemberships)
+    }
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceSearchHandler = useCallback(
+    debounce(searchHandler, 300)
+  , [memberships])
 
   useEffect(() => {
-    api
-      .get("/api/memberships")
+    api.get("/api/memberships")
       .then((res) => {
         if (res.status === 200) {
           setMemberships(res.data);
+          setSearchMemberships(res.data)
+          if (res.data.length > 10) {
+            setPaginated(res.data.slice(0, 10));
+          } else {
+            setPaginated(res.data);
+          }
         }
       })
       .catch((error) => {});
@@ -36,7 +71,8 @@ const Membership = () => {
 
   role === "staff" && headerCells.pop();
 
-  const handleDelete = (id) => {
+  const handleDelete = (e, id, index) => {
+    e.stopPropagation();
     swal({
       title: "Are you sure?",
       text: "You can't undo this action",
@@ -45,14 +81,16 @@ const Membership = () => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        api
-          .delete(`/api/memberships/${id}`)
+        api.delete(`/api/memberships/${id}`)
           .then((res) => {
             if (res.status === 200) {
               swal("Poof! Membership has been deleted!", {
                 icon: "success",
                 timer: 1000,
               });
+              const newMemberships = [...memberships];
+              newMemberships.splice(index, 1);
+              setMemberships(newMemberships);
             }
           })
           .catch((error) => {});
@@ -62,17 +100,17 @@ const Membership = () => {
   return (
     <div className="w-full flex h-full">
       <div className="w-full bg-gray-100">
-        <div className="flex items-center justify-between m-4 px-8 py-4 bg-white drop-shadow-lg">
-          <span className="text-4xl text-primary mr-6">
-            <AiOutlineUnorderedList />
-          </span>
-          <h2 className="uppercase text-3xl tracking-widest font-semibold">
-            Membership List
+      <div className="flex items-center justify-between m-4 px-8 py-4 bg-white drop-shadow-lg">
+          <h2 className="uppercase text-2xl tracking-widest font-semibold">
+            Membership
           </h2>
+          <div className="w-1/4">
+            <SearchBox handleSearch={debounceSearchHandler} />
+          </div>
           <Link to="create">
             <IoIosAddCircle
               size={40}
-              className="text-green-500 hover:text-green-600 transfrom transition-all duration-200 active:text-green-700 active:scale-19"
+              className="text-green-500 hover:text-green-600 transfrom transition-all duration-200 active:text-green-1000 active:scale-19"
             />
           </Link>
         </div>
@@ -89,11 +127,16 @@ const Membership = () => {
                 </tr>
               </thead>
               <tbody>
-                {memberships?.map((membership) => (
+                {paginated.length > 0 && paginated?.map((membership, index) => (
                   <tr
                     key={membership.membershipId}
                     className="cursor-pointer bg-[#fafafa] hover:bg-gray-100 text-center"
                     style={{ border: "1px solid rgba(0,0,0,0.1)" }}
+                    onClick={() =>
+                      navigate(
+                        `/admin/membership/${membership.membershipId}/detail`
+                      )
+                    }
                   >
                     <td className="p-[15px]">{membership.membershipId}</td>
                     <td className="p-[15px] font-semibold">
@@ -119,8 +162,8 @@ const Membership = () => {
                         <div className="flex gap-2 items-center justify-center">
                           <div
                             className="bg-red-600  cursor-pointer p-[8px] inline-block rounded"
-                            onClick={() =>
-                              handleDelete(membership.membershipId)
+                            onClick={(e) =>
+                              handleDelete(e, membership.membershipId, index)
                             }
                           >
                             <FiTrash2
@@ -128,15 +171,20 @@ const Membership = () => {
                               size={14}
                             />
                           </div>
-                          <Link
-                            to={`/admin/membership/${membership.membershipId}/detail`}
-                            className="bg-green-600  cursor-pointer p-[8px] inline-block rounded"
+                          <div
+                            className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(
+                                `/admin/membership/${membership.membershipId}/edit`
+                              );
+                            }}
                           >
-                            <FiEye
+                            <FiEdit
                               className="text-white cursor-pointer"
                               size={14}
                             />
-                          </Link>
+                          </div>
                         </div>
                       </td>
                     )}
@@ -144,6 +192,16 @@ const Membership = () => {
                 ))}
               </tbody>
             </table>
+            {paginated.length === 0 && (<NotFound />)}
+          </div>
+          <div className="text-center py-4">
+            {searchMemberships.length > 10 && (
+              <Pagination
+                current={currentPage}
+                total={Math.floor(paginated.length / 10 + 1) * 10}
+                onChange={handleChangePage}
+              />
+            )}
           </div>
         </div>
       </div>

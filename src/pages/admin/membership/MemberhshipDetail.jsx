@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { HiChevronDoubleLeft, HiOutlinePencil } from "react-icons/hi";
+import { HiChevronDoubleLeft } from "react-icons/hi";
+import { HiPencilSquare } from "react-icons/hi2"
 import api from "../../../utils/api";
-import swal from "sweetalert";
 
 const MemberhshipDetail = () => {
   let { id } = useParams();
   const navigate = useNavigate();
   const [membership, setMembership] = useState({});
-  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     api
@@ -47,22 +46,6 @@ const MemberhshipDetail = () => {
       description: Yup.string().required("Required"),
     }),
     enableReinitialize: true,
-
-    onSubmit: async (values) => {
-      api.put(`/api/memberships/${id}`, values).then((res) => {
-        if (res.status === 200) {
-          swal({
-            title: "Success!",
-            timer: 2000,
-            text: "Facility updated successfully!",
-            icon: "success",
-            buttons: false,
-          }).then(() => {
-            setEditMode(false)
-          });
-        }
-      });
-    },
   });
 
   return (
@@ -73,7 +56,7 @@ const MemberhshipDetail = () => {
             <div className="mx-4">
               <button
                 className="px-4 text-lg uppercase tracking-widest bg-secondary-100rounded-lg drop-shadow-lg"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate("/admin/membership")}
               >
                 <span className="mr-2 inline-block">
                   {<HiChevronDoubleLeft />}
@@ -82,17 +65,6 @@ const MemberhshipDetail = () => {
               </button>
             </div>
             <div className="flex flex-col py-8 px-[200px] mt-2 bg-white shadow-lg">
-              {!editMode && (
-                <div>
-                  <button
-                    className="flex items-center gap-1 float-right text-slate-500 border-slate-300 border-2 py-1 px-5 rounded-md mt-5 mr-3 hover:bg-slate-100"
-                    onClick={() => setEditMode(true)}
-                  >
-                    <HiOutlinePencil />
-                    Edit
-                  </button>
-                </div>
-              )}
               <div className="w-full">
                 <form onSubmit={formik.handleSubmit}>
                   {/* Name input */}
@@ -104,7 +76,7 @@ const MemberhshipDetail = () => {
                       Membership Name
                     </label>
                     <input
-                      disabled={!editMode}
+                      disabled
                       type="text"
                       name="membershipName"
                       id="name"
@@ -129,7 +101,7 @@ const MemberhshipDetail = () => {
                       Descripton
                     </label>
                     <textarea
-                      disabled={!editMode}
+                      disabled
                       type="text"
                       rows={2}
                       name="description"
@@ -156,7 +128,7 @@ const MemberhshipDetail = () => {
                         Training Time
                       </label>
                       <input
-                        disabled={!editMode}
+                        disabled
                         type="number"
                         name="trainingTime"
                         id="type"
@@ -185,7 +157,7 @@ const MemberhshipDetail = () => {
                           $
                         </span>
                         <input
-                          disabled={!editMode}
+                          disabled
                           type="text"
                           name="price"
                           onChange={formik.handleChange}
@@ -214,7 +186,7 @@ const MemberhshipDetail = () => {
                           $
                         </span>
                         <input
-                          disabled={!editMode}
+                          disabled
                           type="text"
                           name="pricePerMonth"
                           onChange={formik.handleChange}
@@ -244,7 +216,7 @@ const MemberhshipDetail = () => {
                           $
                         </span>
                         <input
-                          disabled={!editMode}
+                          disabled
                           type="text"
                           name="pricePerDay"
                           onChange={formik.handleChange}
@@ -270,7 +242,7 @@ const MemberhshipDetail = () => {
                         Training Type
                       </label>
                       <input
-                        disabled={!editMode}
+                        disabled
                         type="text"
                         name="trainingCardType"
                         id="type"
@@ -295,7 +267,7 @@ const MemberhshipDetail = () => {
                         Section
                       </label>
                       <input
-                        disabled={!editMode}
+                        disabled
                         type="number"
                         name="numberOfSession"
                         id="sct"
@@ -320,7 +292,7 @@ const MemberhshipDetail = () => {
                         Class
                       </label>
                       <select
-                        disabled={!editMode}
+                        disabled
                         id="class"
                         name="trainingClass"
                         onChange={formik.handleChange}
@@ -350,7 +322,7 @@ const MemberhshipDetail = () => {
                         Trainer
                       </label>
                       <select
-                        disabled={!editMode}
+                        disabled
                         id="trainer"
                         name="includingTrainer"
                         onChange={formik.handleChange}
@@ -369,25 +341,14 @@ const MemberhshipDetail = () => {
                         )}
                     </div>
                   </div>
-                  {editMode && (
-                    <div>
-                      <hr />
-                      <button
-                        type="submit"
-                        className="float-right bg-blue-600 text-white py-2 px-5 rounded-md mt-5 hover:bg-blue-500"
-                      >
-                        Update
-                      </button>
-                      <div
-                        className="cursor-pointer float-right text-slate-500 border-slate-300 border-2 py-2 px-5 rounded-md mt-5 mr-3 hover:bg-slate-100"
-                        onClick={() => setEditMode(false)}
-                      >
-                        Cancel
-                      </div>
-                    </div>
-                  )}
                 </form>
               </div>
+              <Link to={`/admin/membership/${id}/edit`}>
+                <button className="flex items-center  gap-1 float-right bg-blue-600 text-white py-2 px-3 rounded-md mt-5 hover:bg-blue-500">
+                  <HiPencilSquare />
+                  Edit
+                </button>
+              </Link>
             </div>
           </div>
         </div>

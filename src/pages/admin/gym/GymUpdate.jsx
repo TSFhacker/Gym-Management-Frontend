@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState }  from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -7,59 +7,71 @@ import api from "../../../utils/api";
 import swal from "sweetalert";
 
 const GymUpdate = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  const [Gym, setGym] = useState({});
-
+  let {id} = useParams();
+  const [members, setMembers] = useState([]);
+  const [gym, setGym] = useState({});
+  
   useEffect(() => {
-    api.get(`/api/v1/Gym/${id}`)
-      .then((res) => {
-        setGym(res.data[0]);
+    api.get("/api/v1/gymstaff")
+      .then(res => {
+        if(res.status === 200){
+          setMembers(res.data)
+        }
       })
-      .catch((error) => {});
-  }, [id]);
+      .catch(error => {})
+  },[])
+  useEffect(() => {
+    api.get(`/api/v1/yogaclass`)
+      .then(res => {
+        if(res.status === 200) {
+          const filteredGym = res.data.filter((item) => item.id === id);
+          setGym(filteredGym[0])
+        }
+      })
+      .catch(error => {})
+  }, [id])
 
   const formik = useFormik({
     initialValues: {
-      GymName: Gym.GymName,
-      type: Gym.type,
-      dateOfPurchase: Gym.dateOfPurchase?.slice(0, 10),
-      warrantyDate: Gym.warrantyDate?.slice(0, 10),
-      origin: Gym.origin,
-      quantity: Gym.quantity,
-      status: Gym.status,
+      id: gym.id,
+      name: gym.name,
+      maximumNumber: gym.maximumNumber,
+      location: gym.location,
+      employee: gym.employee?.id,
+      occupied: gym.occupied,
     },
     validationSchema: Yup.object({
-      GymName: Yup.string().required("Required"),
-      type: Yup.string().required("Required"),
-      dateOfPurchase: Yup.string().required("Required"),
-      warrantyDate: Yup.string().required("Required"),
-      origin: Yup.string().required("Required"),
-      status: Yup.string().required("Required"),
-      quantity: Yup.string().required("Required"),
+      id: Yup.string().required("Required"),
+      name: Yup.string().required("Required"),
+      maximumNumber: Yup.number().required("Required"),
+      occupied: Yup.string().required("Required"),
+      location: Yup.string().required("Required"),
+      employee: Yup.string().required("Required"),
     }),
     enableReinitialize: true,
 
     onSubmit: async (values) => {
-      api.put(`/api/v1/Gym/update?id=${id}`, values)
-        .then((res) => {
-          if(res.status === 200) {
-            swal({
-              title: "Success!",
-              timer: 2000,
-              text: "Gym updated successfully!",
-              icon: "success",
-              buttons: false
-            }).then(() => {
-              navigate("/admin/Gym")
-            })
-          }
-        });
+      const data = {...values, employee: {id: values.employee}}
+      console.log(data)
+      api.put(`/api/v1/yogaclass/update?id=${id}`, data).then((res) => {
+        if (res.status === 200) {
+          swal({
+            title: "Success!",
+            timer: 2000,
+            text: "Gym created successfully!",
+            icon: "success",
+            buttons: false,
+          }).then(() => {
+            navigate("/admin/gym");
+          });
+        }
+      });
     },
   });
 
   return (
-    <div className="w-full flex">
+    <div className="w-full flex h-full">
       <div className="w-full bg-gray-100">
           <div className="px-[50px] mt-[20px]">
           <div>
@@ -71,197 +83,150 @@ const GymUpdate = () => {
                 <span className="mr-2 inline-block">
                   {<HiChevronDoubleLeft />}
                 </span>
-                Back to facilities
+                Back to gyms
               </button>
             </div>
             <div className="flex py-8 px-[200px] mt-2 bg-white shadow-lg">
               <div className="w-full">
                 <form onSubmit={formik.handleSubmit}>
-                  {/* File input */}
-                  <div className="flex items-center space-x-6 mb-5">
-                    <div className="shrink-0">
-                      <img
-                        className="h-24  object-cover rounded-md"
-                        src="https://blog.nasm.org/hubfs/cleangym%20%281%29.jpg"
-                        alt="thumbnail"
-                      />
-                    </div>
-                    <input
-                      type="file"
-                      name="thumbnail"
-                      className="block w-full text-sm text-slate-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-full file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-blue-50 file:text-blue-700
-                      hover:file:bg-blue-100"
-                    ></input>
-                  </div>
-
-                  {/* Name input */}
-                  <div className="flex flex-col space-y-1 mb-3">
-                    <label
-                      htmlFor="name"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Gym name
-                    </label>
-                    <input
-                      type="text"
-                      name="GymName"
-                      id="name"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.GymName}
-                      className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    ></input>
-                    {formik.touched.GymName &&
-                      formik.errors.GymName && (
-                        <p className="text-xs font-semibold text-red-500">
-                          {formik.errors.GymName}
-                        </p>
-                      )}
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 gap-4 pb-4">
                     {/* type input */}
                     <div className="flex flex-col space-y-1">
                       <label
-                        htmlFor="type"
+                        htmlFor="id"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Type
+                        ID
                       </label>
                       <input
                         type="text"
-                        name="type"
-                        id="type"
+                        name="id"
+                        id="id"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.type}
+                        value={formik.values.id}
                         className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       ></input>
-                      {formik.touched.type && formik.errors.type && (
+                      {formik.touched.id && formik.errors.id && (
                         <p className="text-xs font-semibold text-red-500">
-                          {formik.errors.type}
+                          {formik.errors.id}
                         </p>
                       )}
                     </div>
-                    {/* date input */}
                     <div className="flex flex-col space-y-1">
                       <label
-                        htmlFor="purchase"
+                        htmlFor="name"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Purchase date
+                        Name
                       </label>
                       <input
-                        type="date"
-                        name="dateOfPurchase"
-                        id="purchase"
+                        type="text"
+                        name="name"
+                        id="name"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.dateOfPurchase}
+                        value={formik.values.name}
                         className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      />
-                      {formik.touched.dateOfPurchase &&
-                        formik.errors.dateOfPurchase && (
-                          <p className="text-xs font-semibold text-red-500">
-                            {formik.errors.dateOfPurchase}
-                          </p>
-                        )}
+                      ></input>
+                      {formik.touched.name && formik.errors.name && (
+                        <p className="text-xs font-semibold text-red-500">
+                          {formik.errors.name}
+                        </p>
+                      )}
                     </div>
-                    {/* date input */}
                     <div className="flex flex-col space-y-1">
                       <label
-                        htmlFor="warranty"
+                        htmlFor="employee"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Warranty date
+                        Employee
                       </label>
-                      <input
-                        type="date"
-                        name="warrantyDate"
-                        id="warranty"
+                      <select
+                        id="employee"
+                        name="employee"
                         onChange={formik.handleChange}
+                        value={formik.values.employee}
                         onBlur={formik.handleBlur}
-                        value={formik.values.warrantyDate}
                         className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      />
-                      {formik.touched.warrantyDate &&
-                        formik.errors.warrantyDate && (
-                          <p className="text-xs font-semibold text-red-500">
-                            {formik.errors.warrantyDate}
-                          </p>
-                        )}
-                    </div>
-
-                    {/* orgin input */}
-                    <div className="flex flex-col space-y-1 mb-3">
-                      <label
-                        htmlFor="origin"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Origin
-                      </label>
-                      <input
-                        type="text"
-                        name="origin"
-                        id="origin"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.origin}
-                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      ></input>
-                      {formik.touched.origin && formik.errors.origin && (
+                        <option>Select employee</option>
+                        {members.map((member) => (
+                          <option key={member.id} value={member.id}>{member.name}</option>
+                        ))}
+                      </select>
+                      {formik.touched.employee && formik.errors.employee && (
                         <p className="text-xs font-semibold text-red-500">
-                          {formik.errors.origin}
+                          {formik.errors.employee}
                         </p>
                       )}
                     </div>
-                    {/* orgin input */}
-                    <div className="flex flex-col space-y-1 mb-3">
+                    <div className="flex flex-col space-y-1">
                       <label
-                        htmlFor="quantity"
+                        htmlFor="maximumNumber"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Quantity
+                        Maximum Number
                       </label>
                       <input
-                        type="text"
-                        name="quantity"
-                        id="quantity"
+                        type="number"
+                        name="maximumNumber"
+                        id="maximumNumber"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.quantity}
+                        value={formik.values.maximumNumber}
                         className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       ></input>
-                      {formik.touched.quantity && formik.errors.quantity && (
+                      {formik.touched.maximumNumber && formik.errors.maximumNumber && (
                         <p className="text-xs font-semibold text-red-500">
-                          {formik.errors.quantity}
+                          {formik.errors.maximumNumber}
                         </p>
                       )}
                     </div>
-
-                    {/* status input */}
-                    <div className="flex flex-col space-y-1 mb-8">
+                    <div className="flex flex-col space-y-1">
                       <label
-                        htmlFor="status"
+                        htmlFor="location"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Status
+                        Location
                       </label>
                       <input
                         type="text"
-                        name="status"
-                        id="status"
+                        name="location"
+                        id="location"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.status}
+                        value={formik.values.location}
                         className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       ></input>
-                      {formik.touched.status && formik.errors.status && (
+                      {formik.touched.location && formik.errors.location && (
                         <p className="text-xs font-semibold text-red-500">
-                          {formik.errors.status}
+                          {formik.errors.location}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex flex-col space-y-1">
+                      <label
+                        htmlFor="isOccupied"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Occupied
+                      </label>
+                      <select
+                        id="occupied"
+                        name="occupied  "
+                        onChange={formik.handleChange}
+                        value={formik.values.occupied}
+                        onBlur={formik.handleBlur}
+                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                        <option>Select occupied</option>
+                        <option value={true}>Occupied</option>
+                        <option value={false}>No Occupied</option>
+                      </select>
+                      {formik.touched.occupied && formik.errors.occupied && (
+                        <p className="text-xs font-semibold text-red-500">
+                          {formik.errors.occupied}
                         </p>
                       )}
                     </div>
@@ -271,7 +236,7 @@ const GymUpdate = () => {
                     type="submit"
                     className="float-right bg-blue-600 text-white py-2 px-5 rounded-md mt-5 hover:bg-blue-500"
                   >
-                    Update Gym
+                    Update
                   </button>
                 </form>
               </div>
