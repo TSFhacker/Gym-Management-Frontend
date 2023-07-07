@@ -1,27 +1,37 @@
-import React from "react";
-import { useNavigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { HiChevronDoubleLeft } from "react-icons/hi";
-import { BsCurrencyDollar } from "react-icons/bs"
 import api from "../../../utils/api";
 import swal from "sweetalert";
 
-const MembershipCreate = () => {
+const MemberhshipEdit = () => {
+  let { id } = useParams();
   const navigate = useNavigate();
+  const [membership, setMembership] = useState({});
+
+  useEffect(() => {
+    api
+      .get(`api/memberships/${id}`)
+      .then((res) => {
+        setMembership(res.data);
+      })
+      .catch((error) => {});
+  }, [id]);
 
   const formik = useFormik({
     initialValues: {
-      membershipName: "",
-      trainingTime: "",
-      price: "",
-      pricePerMonth: "",
-      pricePerDay: "",
-      numberOfSession: "",
-      trainingCardType: "",
-      includingTrainer: "",
-      trainingClass: "",
-      description: ""
+      membershipName: membership.membershipName,
+      trainingTime: membership.trainingTime,
+      price: membership.price,
+      pricePerMonth: membership.pricePerMonth,
+      pricePerDay: membership.pricePerDay,
+      numberOfSession: membership.numberOfSession,
+      trainingCardType: membership.trainingCardType,
+      includingTrainer: membership.includingTrainer,
+      trainingClass: membership.trainingClass,
+      description: membership.description,
     },
     validationSchema: Yup.object({
       membershipName: Yup.string().required("Required"),
@@ -34,22 +44,20 @@ const MembershipCreate = () => {
       includingTrainer: Yup.bool().required("Required"),
       trainingClass: Yup.string().required("Required"),
       description: Yup.string().required("Required"),
-
     }),
     enableReinitialize: true,
 
     onSubmit: async (values) => {
-      api.post(`api/memberships`, values).then((res) => {
+      api.put(`/api/memberships/${id}`, values).then((res) => {
         if (res.status === 200) {
           swal({
             title: "Success!",
             timer: 2000,
-            text: "Facility created successfully!",
+            text: "Facility updated successfully!",
             icon: "success",
             buttons: false,
-          }).then(() => {
-            navigate("/admin/membership");
           });
+          navigate(`/admin/membership/${id}/detail`);
         }
       });
     },
@@ -63,7 +71,7 @@ const MembershipCreate = () => {
             <div className="mx-4">
               <button
                 className="px-4 text-lg uppercase tracking-widest bg-secondary-100rounded-lg drop-shadow-lg"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate("/admin/membership")}
               >
                 <span className="mr-2 inline-block">
                   {<HiChevronDoubleLeft />}
@@ -71,7 +79,7 @@ const MembershipCreate = () => {
                 Back to memberships
               </button>
             </div>
-            <div className="flex py-8 px-[200px] mt-2 bg-white shadow-lg">
+            <div className="flex flex-col py-8 px-[200px] mt-2 bg-white shadow-lg">
               <div className="w-full">
                 <form onSubmit={formik.handleSubmit}>
                   {/* Name input */}
@@ -88,8 +96,8 @@ const MembershipCreate = () => {
                       id="name"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.facilityName}
-                      className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      value={formik.values.membershipName}
+                      className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
                     ></input>
                     {formik.touched.membershipName &&
                       formik.errors.membershipName && (
@@ -98,10 +106,11 @@ const MembershipCreate = () => {
                         </p>
                       )}
                   </div>
+                  {/* des */}
                   <div className="flex flex-col space-y-1 mb-3">
                     <label
                       htmlFor="des"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white disabled:bg-slate-100"
                     >
                       Descripton
                     </label>
@@ -112,8 +121,8 @@ const MembershipCreate = () => {
                       id="des"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.facilityName}
-                      className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      value={formik.values.description}
+                      className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
                     ></textarea>
                     {formik.touched.description &&
                       formik.errors.description && (
@@ -138,7 +147,7 @@ const MembershipCreate = () => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.trainingTime}
-                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
                       ></input>
                       {formik.touched.trainingTime &&
                         formik.errors.trainingTime && (
@@ -156,8 +165,8 @@ const MembershipCreate = () => {
                         Price
                       </label>
                       <div className="flex">
-                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                          <BsCurrencyDollar />
+                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600 disabled:bg-slate-100">
+                          $
                         </span>
                         <input
                           type="text"
@@ -166,7 +175,7 @@ const MembershipCreate = () => {
                           onBlur={formik.handleBlur}
                           value={formik.values.price}
                           id="price"
-                          className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
                         />
                       </div>
                       {formik.touched.price && formik.errors.price && (
@@ -185,7 +194,7 @@ const MembershipCreate = () => {
                       </label>
                       <div className="flex">
                         <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                          <BsCurrencyDollar />
+                          $
                         </span>
                         <input
                           type="text"
@@ -194,14 +203,15 @@ const MembershipCreate = () => {
                           onBlur={formik.handleBlur}
                           value={formik.values.pricePerMonth}
                           id="priceM"
-                          className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
                         />
                       </div>
-                      {formik.touched.pricePerMonth && formik.errors.pricePerMonth && (
-                        <p className="text-xs font-semibold text-red-500">
-                          {formik.errors.pricePerMonth}
-                        </p>
-                      )}
+                      {formik.touched.pricePerMonth &&
+                        formik.errors.pricePerMonth && (
+                          <p className="text-xs font-semibold text-red-500">
+                            {formik.errors.pricePerMonth}
+                          </p>
+                        )}
                     </div>
                     {/* price input */}
                     <div className="flex flex-col space-y-1">
@@ -213,7 +223,7 @@ const MembershipCreate = () => {
                       </label>
                       <div className="flex">
                         <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                          <BsCurrencyDollar />
+                          $
                         </span>
                         <input
                           type="text"
@@ -222,14 +232,15 @@ const MembershipCreate = () => {
                           onBlur={formik.handleBlur}
                           value={formik.values.pricePerDay}
                           id="priceD"
-                          className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm roundedr--lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm roundedr--lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
                         />
                       </div>
-                      {formik.touched.pricePerDay && formik.errors.pricePerDay && (
-                        <p className="text-xs font-semibold text-red-500">
-                          {formik.errors.pricePerDay}
-                        </p>
-                      )}
+                      {formik.touched.pricePerDay &&
+                        formik.errors.pricePerDay && (
+                          <p className="text-xs font-semibold text-red-500">
+                            {formik.errors.pricePerDay}
+                          </p>
+                        )}
                     </div>
                     {/* type input */}
                     <div className="flex flex-col space-y-1 mb-3">
@@ -240,13 +251,13 @@ const MembershipCreate = () => {
                         Training Type
                       </label>
                       <input
-                        type=""
+                        type="text"
                         name="trainingCardType"
                         id="type"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.trainingCardType}
-                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
                       ></input>
                       {formik.touched.trainingCardType &&
                         formik.errors.trainingCardType && (
@@ -270,7 +281,7 @@ const MembershipCreate = () => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.numberOfSession}
-                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
                       ></input>
                       {formik.touched.numberOfSession &&
                         formik.errors.numberOfSession && (
@@ -279,25 +290,30 @@ const MembershipCreate = () => {
                           </p>
                         )}
                     </div>
-                     {/* class input */}
-                     <div className="flex flex-col space-y-1 mb-3">
+                    {/* class */}
+                    <div className="flex flex-col space-y-1 mb-3">
                       <label
                         htmlFor="class"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
                         Class
                       </label>
-                      <input
-                        type="text"
-                        name="trainingClass"
+                      <select
                         id="class"
+                        name="trainingClass"
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
                         value={formik.values.trainingClass}
-                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      ></input>
+                        onBlur={formik.handleBlur}
+                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
+                      >
+                        <option value="Class A">Class A</option>
+                        <option value="Class B">Class B</option>
+                        <option value="Class C">Class C</option>
+                        <option value="Class D">Class D</option>
+                        <option value="Class E">Class E</option>
+                      </select>
                       {formik.touched.trainingClass &&
-                        formik.errors.numberOfSession && (
+                        formik.errors.trainingClass && (
                           <p className="text-xs font-semibold text-red-500">
                             {formik.errors.trainingClass}
                           </p>
@@ -317,9 +333,8 @@ const MembershipCreate = () => {
                         onChange={formik.handleChange}
                         value={formik.values.includingTrainer}
                         onBlur={formik.handleBlur}
-                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-100"
                       >
-                        <option>Select option</option>
                         <option value={true}>Include Trainer</option>
                         <option value={false}>No Include Trainer</option>
                       </select>
@@ -332,12 +347,23 @@ const MembershipCreate = () => {
                     </div>
                   </div>
                   <hr />
-                  <button
-                    type="submit"
-                    className="float-right bg-blue-600 text-white py-2 px-5 rounded-md mt-5 hover:bg-blue-500"
-                  >
-                    Create
-                  </button>
+                  <div className="flex items-center mt-5 gap-4 justify-end">
+                    <Link to={`/admin/membership/${id}/detail`}>
+                      <button
+                        type="submit"
+                        style={{ border: "1px solid rgba(0,0,0,0.1)" }}
+                        className="float-right bg-white text-slate-700 py-2 px-5 rounded-md hover:bg-slate-100"
+                      >
+                        Back to detail
+                      </button>
+                    </Link>
+                    <button
+                      type="submit"
+                      className="float-right bg-blue-600 text-white py-2 px-5 rounded-md hover:bg-blue-500 mt-0"
+                    >
+                      Update
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -348,4 +374,4 @@ const MembershipCreate = () => {
   );
 };
 
-export default MembershipCreate;
+export default MemberhshipEdit;

@@ -15,7 +15,7 @@ const DashboardNavbar = () => {
   };
 
   return (
-    <div className="w-full h-[60px] shadow bg-white">
+    <div className="w-full h-[60px] shadow-md bg-white sticky top-0 z-10">
       <div className="flex items-center justify-between w-full h-full px-10 mb-8">
         <div className="flex items-center space-x-2">
           <img src={AdminIcon} alt="admin icon" />

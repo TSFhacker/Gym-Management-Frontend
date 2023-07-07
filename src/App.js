@@ -4,26 +4,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "./store/actions/products-actions";
 import { AnimatePresence } from "framer-motion";
 
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Products from "./pages/Products";
-import ProductDetail from "./pages/ProductDetail";
-import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
+// import Home from "./pages/Home";
+// import About from "./pages/About";
+// import Products from "./pages/Products";
+// import ProductDetail from "./pages/ProductDetail";
+// import Cart from "./pages/Cart";
+// import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import MainNavigation from "./layout/MainNavigation";
-import Footer from "./layout/Footer";
+// import MainNavigation from "./layout/MainNavigation";
+// import Footer from "./layout/Footer";
 import Dashboard from "./pages/dashboard/Dashboard";
-import TheProducts from "./components/dashboard/TheProducts";
-import AddProduct from "./components/dashboard/AddProduct";
-import UpdateProducts from "./components/dashboard/UpdateProducts";
-import ProductUpdate from "./components/dashboard/ProductUpdate";
+// import TheProducts from "./components/dashboard/TheProducts";
+// import AddProduct from "./components/dashboard/AddProduct";
+// import UpdateProducts from "./components/dashboard/UpdateProducts";
+// import ProductUpdate from "./components/dashboard/ProductUpdate";
 
-import LoginRedirect from "./components/auth/LoginRedirect";
+// import LoginRedirect from "./components/auth/LoginRedirect";
 import RegisterRedirect from "./components/auth/RegisterRedirect";
-import DashboardRedirect from "./components/auth/DashboardRedirect";
+// import DashboardRedirect from "./components/auth/DashboardRedirect";
 import HomeRedirect from "./components/auth/HomeRedirect";
 
 // import MemberHistory from "./pages/member/history";
@@ -54,6 +54,8 @@ import StaffEdit from "./pages/admin/staff/StaffEdit";
 import ListGym from "./pages/admin/gym/ListGym";
 import GymUpdate from "./pages/admin/gym/GymUpdate";
 import GymCreate from "./pages/admin/gym/GymCreate";
+import MemberhshipEdit from "./pages/admin/membership/MemberhshipEdit";
+import StaffDetail from "./pages/admin/staff/StaffDetail";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -88,7 +90,7 @@ const App = () => {
           </Route>
 
           <Route>
-            <Route path="admin" element={<Dashboard />}>
+            <Route path="admin/" element={<Dashboard />}>
               <Route path="facility" element={<Facility />} />
               <Route path="facility/:id/update" element={<FacilityUpdate />} />
               <Route path="facility/create" element={<FacilityCreate />} />
@@ -97,9 +99,14 @@ const App = () => {
               <Route path="staff" element={<Staff />} />
               <Route path="staff/create" element={<StaffCreate />} />
               <Route path="staff/:id/update" element={<StaffEdit />} />
+              <Route path="staff/:id/detail" element={<StaffDetail />} />
               <Route
                 path="membership/:id/detail"
                 element={<MemberhshipDetail />}
+              />
+              <Route
+                path="membership/:id/edit"
+                element={<MemberhshipEdit />}
               />
               <Route path="gym" element={<ListGym />} />
               <Route path="gym/:id/update" element={<GymUpdate />} />
