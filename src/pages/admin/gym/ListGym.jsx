@@ -176,7 +176,7 @@ const ListGym = () => {
                             />
                           </div>
                           <Link
-                            to={`/admin/gym/${gym.id}/update`}
+                            to={`/admin/gym/${gym.yogaClass.id}/update`}
                             className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
                           >
                             <FiEdit
