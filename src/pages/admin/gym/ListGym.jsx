@@ -14,7 +14,7 @@ const ListGym = () => {
   const [gyms, setGyms] = useState([]);
   const [paginated, setPaginated] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchGyms, setSearchGyms] = useState([])
+  const [searchGyms, setSearchGyms] = useState([]);
 
   const avatars = [
     "https://img.freepik.com/free-photo/portrait-handsome-brunet-unshaven-adult-man-looks-with-calm-confident-expression-has-serious-look-wears-casual-jumper-poses-making-photo-against-white-background-being-hard-impress_273609-57668.jpg?w=996&t=st=1688304411~exp=1688305011~hmac=fd4d016bad5a8370a7180abe5a07ac41536549a1eb63129bed58f99b7187623a",
@@ -28,35 +28,35 @@ const ListGym = () => {
     setCurrentPage(page);
     setPaginated(gyms.slice((page - 1) * 7, page * 7));
   };
-  
-  const searchHandler = (e) => {
-    const searchValue = e.target.value
-    const foundGyms = gyms.filter((gym) =>
-      gym.name?.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setSearchGyms(foundGyms)
-    if(foundGyms.length > 7) {
-      setPaginated(foundGyms.slice(0,10))
-    } else {
-      setPaginated(foundGyms)
-    }
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounceSearchHandler = useCallback(
-    debounce(searchHandler, 300)
-  , [gyms])
 
+  const searchHandler = (e) => {
+    const searchValue = e.target.value;
+    const foundGyms = gyms.filter((gym) =>
+      gym.yogaClass.name?.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setSearchGyms(foundGyms);
+    if (foundGyms.length > 7) {
+      setPaginated(foundGyms.slice(0, 10));
+    } else {
+      setPaginated(foundGyms);
+    }
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceSearchHandler = useCallback(debounce(searchHandler, 300), [
+    gyms,
+  ]);
 
   useEffect(() => {
-    api.get("/api/v1/yogaclass")
+    api
+      .get("/api/v1/classManager")
       .then((res) => {
         if (res.status === 200) {
           setGyms(res.data);
-          setSearchGyms(res.data)
-          if(res.data.length > 7) {
+          setSearchGyms(res.data);
+          if (res.data.length > 7) {
             setPaginated(res.data.slice(0, 7));
           } else {
-            setPaginated(res.data)
+            setPaginated(res.data);
           }
         }
       })
@@ -90,8 +90,14 @@ const ListGym = () => {
                 icon: "success",
               });
               const newGyms = [...gyms];
-              newGyms.splice(index, 1);
+              newGyms.splice((currentPage - 1) * 7 + index, 1);
               setGyms(newGyms);
+              setSearchGyms(newGyms);
+              if (newGyms.length > 7) {
+                setPaginated(newGyms.slice((currentPage - 1) * 7, currentPage * 7));
+              } else {
+                setPaginated(newGyms);
+              }
             }
           })
           .catch((error) => {});
@@ -128,56 +134,63 @@ const ListGym = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginated.length > 0 && paginated.map((gym, index) => (
-                  <tr
-                    key={gym.id}
-                    className="cursor-pointer bg-[#fafafa] text-left hover:bg-gray-100"
-                    style={{ border: "1px solid rgba(0,0,0,0.1)" }}
-                  >
-                    <td className="p-3">{gym.id}</td>
-                    <td className="p-3">{gym.name}</td>
-                    <td className="p-3 font-semibold">
-                      <div className="flex items-center gap-1">
-                        <img
-                          className="object-cover object-center h-10 w-10 rounded-full"
-                          src={index < 5 ? avatars[index] : avatars[5]}
-                          alt=""
-                        ></img>
-                        {gym.employee.name}
-                      </div>
-                    </td>
-                    <td className="p-3 text-gray-500">{gym.maximumNumber}</td>
-                    <td className="p-3 text-gray-500">{gym.location}</td>
-                    <td className="p-3 text-gray-500">
-                      {gym.occupied ? "Occupied" : "Not Occupied"}
-                    </td>
-                    <td className="p-3">
-                      <div className="flex gap-2 items-center">
-                        <div
-                          className="bg-red-600  cursor-pointer p-[8px] inline-block rounded"
-                          onClick={() => handleDelete(gym.id, index)}
-                        >
-                          <FiTrash2
-                            className="text-white cursor-pointer"
-                            size={14}
-                          />
+                {paginated.length > 0 &&
+                  paginated.map((gym, index) => (
+                    <tr
+                      key={gym.id}
+                      className="cursor-pointer bg-[#fafafa] text-left hover:bg-gray-100"
+                      style={{ border: "1px solid rgba(0,0,0,0.1)" }}
+                    >
+                      <td className="p-3">{gym.yogaClass.id}</td>
+                      <td className="p-3">{gym.yogaClass.name}</td>
+                      <td className="p-3 font-semibold">
+                        <div className="flex items-center gap-1">
+                          <img
+                            className="object-cover object-center h-10 w-10 rounded-full"
+                            src={index < 5 ? avatars[index] : avatars[5]}
+                            alt=""
+                          ></img>
+                          {gym.gymStaff.name}
                         </div>
-                        <Link
-                          to={`/admin/gym/${gym.id}/update`}
-                          className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
-                        >
-                          <FiEdit
-                            className="text-white cursor-pointer"
-                            size={14}
-                          />
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="p-3 text-gray-500">
+                        {gym.yogaClass.maximumNumber}
+                      </td>
+                      <td className="p-3 text-gray-500">
+                        {gym.yogaClass.location}
+                      </td>
+                      <td className="p-3 text-gray-500">
+                        {gym.yogaClass.occupied ? "Occupied" : "Not Occupied"}
+                      </td>
+                      <td className="p-3">
+                        <div className="flex gap-2 items-center">
+                          <div
+                            className="bg-red-600  cursor-pointer p-[8px] inline-block rounded"
+                            onClick={() =>
+                              handleDelete(gym.yogaClass.id, index)
+                            }
+                          >
+                            <FiTrash2
+                              className="text-white cursor-pointer"
+                              size={14}
+                            />
+                          </div>
+                          <Link
+                            to={`/admin/gym/${gym.id}/update`}
+                            className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
+                          >
+                            <FiEdit
+                              className="text-white cursor-pointer"
+                              size={14}
+                            />
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
-            {paginated.length === 0 && (<NotFound />)}
+            {paginated.length === 0 && <NotFound />}
           </div>
           {searchGyms.length > 7 && (
             <div className="text-center w-full pt-4">

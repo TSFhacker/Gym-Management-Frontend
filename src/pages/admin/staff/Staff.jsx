@@ -38,7 +38,9 @@ const Staff = () => {
     }
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounceSearchHandler = useCallback(debounce(searchHandler, 300), [staffs]);
+  const debounceSearchHandler = useCallback(debounce(searchHandler, 300), [
+    staffs,
+  ]);
 
   useEffect(() => {
     api
@@ -62,7 +64,7 @@ const Staff = () => {
     setPaginated(staffs.slice((page - 1) * 10, page * 10));
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id, index) => {
     swal({
       title: "Are you sure?",
       text: "You can't undo this action",
@@ -78,6 +80,15 @@ const Staff = () => {
               swal("Poof! Facility has been deleted!", {
                 icon: "success",
               });
+              const newStaffs = [...staffs];
+              newStaffs.splice((currentPage - 1) * 7 + index, 1);
+              setStaffs(newStaffs);
+              setSearchStaff(newStaffs);
+              if (newStaffs.length > 10) {
+                setPaginated(newStaffs.slice((currentPage - 1) * 10, currentPage * 10));
+              } else {
+                setPaginated(newStaffs);
+              }
             }
           })
           .catch((error) => {});
@@ -105,7 +116,7 @@ const Staff = () => {
           <div className="overflow-auto">
             {paginated.length > 0 && (
               <div class="grid grid-cols-4 gap-4">
-                {paginated.map((staff) => (
+                {paginated.map((staff, index) => (
                   <div
                     key={staff.id}
                     style={{ border: "1px solid rgba(0,0,0,0.1)" }}
@@ -151,7 +162,7 @@ const Staff = () => {
                       </Link>
                       <button
                         className="flex items-center gap-1 justify-center w-full float-right text-red-600 py-2 px-5 hover:text-red-500"
-                        onClick={() => handleDelete(staff.id)}
+                        onClick={() => handleDelete(staff.id, index)}
                       >
                         <FiTrash2 />
                         Delete
