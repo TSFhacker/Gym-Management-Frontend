@@ -53,7 +53,7 @@ const MemberhshipEdit = () => {
           swal({
             title: "Success!",
             timer: 2000,
-            text: "Facility updated successfully!",
+            text: "Membership updated successfully!",
             icon: "success",
             buttons: false,
           });
