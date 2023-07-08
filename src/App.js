@@ -120,6 +120,10 @@ const App = () => {
               <Route path="member" element={<ListMember />} />
               <Route path="member/:id" element={<MemberRegistration />} />
               <Route path="membership" element={<Membership />} />
+              <Route
+                path="membership/:id/detail"
+                element={<MemberhshipDetail />}
+              />
               <Route path="feedback" element={<ListFeedback />} />
             </Route>
           </Route>

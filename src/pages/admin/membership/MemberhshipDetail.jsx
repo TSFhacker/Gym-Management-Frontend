@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { HiChevronDoubleLeft } from "react-icons/hi";
-import { HiPencilSquare } from "react-icons/hi2"
+import { HiPencilSquare } from "react-icons/hi2";
 import api from "../../../utils/api";
+import { useSelector } from "react-redux";
 
 const MemberhshipDetail = () => {
   let { id } = useParams();
   const navigate = useNavigate();
   const [membership, setMembership] = useState({});
+
+  const { pathname } = useLocation();
+  const role = pathname.split("/")[1];
 
   useEffect(() => {
     api
@@ -56,7 +60,7 @@ const MemberhshipDetail = () => {
             <div className="mx-4">
               <button
                 className="px-4 text-lg uppercase tracking-widest bg-secondary-100rounded-lg drop-shadow-lg"
-                onClick={() => navigate("/admin/membership")}
+                onClick={() => navigate(`/${role}/membership`)}
               >
                 <span className="mr-2 inline-block">
                   {<HiChevronDoubleLeft />}

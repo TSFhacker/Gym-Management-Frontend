@@ -48,6 +48,7 @@ const Membership = () => {
     api
       .get("/api/memberships")
       .then((res) => {
+        console.log(res);
         if (res.status === 200) {
           setMemberships(res.data);
           setSearchMemberships(res.data);
@@ -154,9 +155,7 @@ const Membership = () => {
                       className="cursor-pointer bg-[#fafafa] hover:bg-gray-100 text-center"
                       style={{ border: "1px solid rgba(0,0,0,0.1)" }}
                       onClick={() =>
-                        navigate(
-                          `/admin/membership/${membership.membershipId}/detail`
-                        )
+                        navigate(`${membership.membershipId}/detail`)
                       }
                     >
                       <td className="p-[15px]">{membership.membershipId}</td>

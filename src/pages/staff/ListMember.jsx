@@ -6,10 +6,13 @@ import { IoIosAddCircle } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import MemberInfoForm from "./MemberInfoForm";
 import DeletePopup from "./DeletePopup";
+import { MdCardMembership } from "react-icons/md";
+import AddMembershipForm from "./AddMembershipForm";
 
 const ListMember = (props) => {
   const [searchInput, setSearchInput] = useState("");
   const [openModal, setOpenModal] = useState(false);
+  const [openAddMembershipForm, setOpenAddMembershipForm] = useState(false);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
   const [updatedMemberId, setUpdatedMemberId] = useState(0);
   const [deletedMemberId, setDeletedMemberId] = useState(0);
@@ -97,10 +100,12 @@ const ListMember = (props) => {
                   key={member.memberId}
                   className="bg-[#fafafa] hover:bg-gray-100 cursor-pointer"
                   style={{ border: "1px solid rgba(0,0,0,0.1)" }}
-                  onClick={() => navigate(`${member.memberId}`)}
                 >
                   <td className="p-[15px]">{member.memberId}</td>
-                  <td className="p-[15px]">
+                  <td
+                    className="p-[15px]"
+                    onClick={() => navigate(`${member.memberId}`)}
+                  >
                     <img
                       src="/default-avatar.png"
                       alt="default"
@@ -126,7 +131,16 @@ const ListMember = (props) => {
                   <td className="p-[15px]">
                     <div className="flex gap-2 items-center">
                       <button
-                        className="bg-orange-400 text-white px-4 py-1 rounded-md shadow-md hover:bg-orange-500 transition-all duration-200 transform active:scale-95 mr-8"
+                        className="bg-blue-600 text-white px-4 py-1 rounded-md shadow-md hover:bg-blue-700 transition-all duration-200 transform active:scale-95"
+                        onClick={() => {
+                          setOpenAddMembershipForm(true);
+                          setUpdatedMemberId(member.memberId);
+                        }}
+                      >
+                        <MdCardMembership className="inline-block" />
+                      </button>
+                      <button
+                        className="bg-orange-400 text-white px-4 py-1 rounded-md shadow-md hover:bg-orange-500 transition-all duration-200 transform active:scale-95"
                         onClick={(e) => {
                           setOpenModal(true);
                           setUpdatedMemberId(member.memberId);
@@ -169,6 +183,14 @@ const ListMember = (props) => {
           memberList={memberList}
           setMemberList={setMemberList}
           setMemberList2={setMemberList2}
+        />
+      )}
+
+      {openAddMembershipForm && (
+        <AddMembershipForm
+          setOpenModal={setOpenAddMembershipForm}
+          setUpdatedMemberId={setUpdatedMemberId}
+          updatedMemberId={updatedMemberId}
         />
       )}
 
