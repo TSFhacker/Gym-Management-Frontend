@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import { FiEdit } from "react-icons/fi";
@@ -15,6 +15,7 @@ const ListGym = () => {
   const [paginated, setPaginated] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchGyms, setSearchGyms] = useState([]);
+  const navigate = useNavigate();
 
   const avatars = [
     "https://img.freepik.com/free-photo/portrait-handsome-brunet-unshaven-adult-man-looks-with-calm-confident-expression-has-serious-look-wears-casual-jumper-poses-making-photo-against-white-background-being-hard-impress_273609-57668.jpg?w=996&t=st=1688304411~exp=1688305011~hmac=fd4d016bad5a8370a7180abe5a07ac41536549a1eb63129bed58f99b7187623a",
@@ -66,14 +67,15 @@ const ListGym = () => {
   const headerCells = [
     "ID",
     "Name",
-    "Employee",
+    "Staff",
     "Maximum",
     "location",
     "Occupied",
     "Action",
   ];
 
-  const handleDelete = (id, index) => {
+  const handleDelete = (e, id, index) => {
+    e.stopPropagation();
     swal({
       title: "Are you sure?",
       text: "You can't undo this action",
@@ -140,6 +142,7 @@ const ListGym = () => {
                       key={gym.id}
                       className="cursor-pointer bg-[#fafafa] text-left hover:bg-gray-100"
                       style={{ border: "1px solid rgba(0,0,0,0.1)" }}
+                      onClick={() => navigate(`/admin/gym/${gym.yogaClass.id}/detail`)}
                     >
                       <td className="p-3">{gym.yogaClass.id}</td>
                       <td className="p-3">{gym.yogaClass.name}</td>
@@ -166,8 +169,8 @@ const ListGym = () => {
                         <div className="flex gap-2 items-center">
                           <div
                             className="bg-red-600  cursor-pointer p-[8px] inline-block rounded"
-                            onClick={() =>
-                              handleDelete(gym.yogaClass.id, index)
+                            onClick={(e) =>
+                              handleDelete(e, gym.yogaClass.id, index)
                             }
                           >
                             <FiTrash2
@@ -175,15 +178,20 @@ const ListGym = () => {
                               size={14}
                             />
                           </div>
-                          <Link
-                            to={`/admin/gym/${gym.yogaClass.id}/update`}
-                            className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
-                          >
-                            <FiEdit
-                              className="text-white cursor-pointer"
-                              size={14}
-                            />
-                          </Link>
+                          <div
+                              className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(
+                                  `/admin/gym/${gym.yogaClass.id}/update`
+                                );
+                              }}
+                            >
+                              <FiEdit
+                                className="text-white cursor-pointer"
+                                size={14}
+                              />
+                            </div>
                         </div>
                       </td>
                     </tr>

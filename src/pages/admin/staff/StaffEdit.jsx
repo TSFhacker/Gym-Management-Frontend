@@ -50,7 +50,7 @@ const StaffEdit = () => {
           swal({
             title: "Success!",
             timer: 2000,
-            text: "Staff added successfully!",
+            text: "Staff updated successfully!",
             icon: "success",
             buttons: false,
           }).then(() => {
