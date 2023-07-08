@@ -107,6 +107,12 @@ const Membership = () => {
           })
           .catch((error) => {});
       }
+
+      const deletedIndex = memberships.findIndex((e) => e.membershipId === id);
+      setMemberships([
+        ...memberships.slice(0, deletedIndex),
+        ...memberships.slice(deletedIndex + 1),
+      ]);
     });
   };
   return (

@@ -75,7 +75,8 @@ const Facility = () => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        axios.delete(`http://localhost:8080/api/v1/facility/delete?id=${id}`)
+        axios
+          .delete(`http://localhost:8080/api/v1/facility/delete?id=${id}`)
           .then((res) => {
             if (res.status === 200) {
               swal("Poof! Facility has been deleted!", {
@@ -95,6 +96,12 @@ const Facility = () => {
           })
           .catch((error) => {});
       }
+      const deletedIndex = facilities.findIndex((e) => e.id === id);
+
+      setFacilities([
+        ...facilities.slice(0, deletedIndex),
+        ...facilities.slice(deletedIndex + 1),
+      ]);
     });
   };
   return (

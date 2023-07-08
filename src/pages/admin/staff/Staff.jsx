@@ -77,7 +77,7 @@ const Staff = () => {
           .delete(`api/v1/gymstaff/delete?id=${id}`)
           .then((res) => {
             if (res.status === 200) {
-              swal("Poof! Facility has been deleted!", {
+              swal("Poof! Staff has been deleted!", {
                 icon: "success",
               });
               const newStaffs = [...staffs];
@@ -85,14 +85,24 @@ const Staff = () => {
               setStaffs(newStaffs);
               setSearchStaff(newStaffs);
               if (newStaffs.length > 10) {
-                setPaginated(newStaffs.slice((currentPage - 1) * 12, currentPage * 12));
+                setPaginated(
+                  newStaffs.slice((currentPage - 1) * 12, currentPage * 12)
+                );
               } else {
                 setPaginated(newStaffs);
               }
             }
           })
-          .catch((error) => {});
+          .catch((error) => {
+            console.log(error);
+          });
       }
+
+      const deletedIndex = staffs.findIndex((e) => e.id === id);
+      setStaffs([
+        ...staffs.slice(0, deletedIndex),
+        ...staffs.slice(deletedIndex + 1),
+      ]);
     });
   };
   return (
