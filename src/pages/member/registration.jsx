@@ -42,9 +42,6 @@ const MemberRegistration = () => {
   return (
     <div>
       <div className="flex items-center p-8 mx-4 my-8 bg-white shadow-2xl drop-shadow-md">
-        <span className="mr-6 text-4xl text-primary">
-          <IoMdAddCircle />
-        </span>
         <h2 className="text-4xl font-semibold tracking-widest uppercase">
           Registration
         </h2>
