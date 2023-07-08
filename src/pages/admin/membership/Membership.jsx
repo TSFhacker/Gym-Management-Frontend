@@ -48,6 +48,7 @@ const Membership = () => {
     api
       .get("/api/memberships")
       .then((res) => {
+        console.log(res);
         if (res.status === 200) {
           setMemberships(res.data);
           setSearchMemberships(res.data);
@@ -107,6 +108,12 @@ const Membership = () => {
           })
           .catch((error) => {});
       }
+
+      const deletedIndex = memberships.findIndex((e) => e.membershipId === id);
+      setMemberships([
+        ...memberships.slice(0, deletedIndex),
+        ...memberships.slice(deletedIndex + 1),
+      ]);
     });
   };
   return (
@@ -120,10 +127,12 @@ const Membership = () => {
             <SearchBox handleSearch={debounceSearchHandler} />
           </div>
           <Link to="create">
-            <IoIosAddCircle
-              size={40}
-              className="text-green-500 hover:text-green-600 transfrom transition-all duration-200 active:text-green-1000 active:scale-19"
-            />
+            {role === "admin" && (
+              <IoIosAddCircle
+                size={40}
+                className="text-green-500 hover:text-green-600 transfrom transition-all duration-200 active:text-green-700 active:scale-19"
+              />
+            )}
           </Link>
         </div>
         <div className="px-[16px] mt-[20px]">
@@ -146,9 +155,7 @@ const Membership = () => {
                       className="cursor-pointer bg-[#fafafa] hover:bg-gray-100 text-center"
                       style={{ border: "1px solid rgba(0,0,0,0.1)" }}
                       onClick={() =>
-                        navigate(
-                          `/admin/membership/${membership.membershipId}/detail`
-                        )
+                        navigate(`${membership.membershipId}/detail`)
                       }
                     >
                       <td className="p-[15px]">{membership.membershipId}</td>

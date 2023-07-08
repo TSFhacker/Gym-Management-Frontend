@@ -22,6 +22,7 @@ const MemberInfoForm = ({
   const [birthday, setBirthday] = useState(
     member ? new Date(member.birthday) : new Date()
   );
+  const [registrationType, setRegistrationType] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
 
   const { memberId } = useParams();

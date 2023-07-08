@@ -104,7 +104,9 @@ const ListTrainee = (props) => {
                       />
                     </td>
                     <td className="p-[15px] font-semibold">{member.name}</td>
-                    <td className="p-[15px text-gray-500">{member.birthday}</td>
+                    <td className="p-[15px text-gray-500">
+                      {new Date(member.birthday).toDateString()}
+                    </td>
                     <td className="p-[15px] text-gray-500">{member.gender}</td>
                     <td className="p-[15px] text-gray-500">{member.email}</td>
                     <td className="p-[15px] text-gray-500">
