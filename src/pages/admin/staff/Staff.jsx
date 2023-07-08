@@ -97,12 +97,6 @@ const Staff = () => {
             console.log(error);
           });
       }
-
-      const deletedIndex = staffs.findIndex((e) => e.id === id);
-      setStaffs([
-        ...staffs.slice(0, deletedIndex),
-        ...staffs.slice(deletedIndex + 1),
-      ]);
     });
   };
   return (

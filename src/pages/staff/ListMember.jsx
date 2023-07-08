@@ -3,7 +3,7 @@ import { AiOutlineUnorderedList, AiFillEdit } from "react-icons/ai";
 import { BsTrashFill } from "react-icons/bs";
 import { IoIosAddCircle } from "react-icons/io";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MemberInfoForm from "./MemberInfoForm";
 import DeletePopup from "./DeletePopup";
 
@@ -15,6 +15,7 @@ const ListMember = (props) => {
   const [deletedMemberId, setDeletedMemberId] = useState(0);
   const [memberList, setMemberList] = useState([]);
   const [memberList2, setMemberList2] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -94,8 +95,9 @@ const ListMember = (props) => {
               {memberList2?.map((member) => (
                 <tr
                   key={member.memberId}
-                  className="bg-[#fafafa] hover:bg-gray-100"
+                  className="bg-[#fafafa] hover:bg-gray-100 cursor-pointer"
                   style={{ border: "1px solid rgba(0,0,0,0.1)" }}
+                  onClick={() => navigate(`${member.memberId}`)}
                 >
                   <td className="p-[15px]">{member.memberId}</td>
                   <td className="p-[15px]">

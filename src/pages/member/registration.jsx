@@ -18,10 +18,13 @@ const MemberRegistration = () => {
   const [histories, setHistories] = useState([]);
 
   const [select, setSelect] = useState(null);
-  const userId = useSelector((state) => state.auth.id);
+  const { id } = useParams();
+  const user_id = useSelector((state) => state.auth.id);
+  const userId = id ? parseInt(id) : user_id;
 
   useEffect(() => {
     api.get("/api/registrations").then(({ data }) => {
+      console.log(data);
       const filtered = data?.filter((his) => his.memberId.memberId === userId);
       setHistories(filtered);
       setRegistration(
@@ -77,7 +80,7 @@ const MemberRegistration = () => {
           </div>
           {registration?.membershipId.includingTrainer && (
             <div className="">
-              <div className="text-lg font-bold">Your personal trainer</div>
+              <div className="text-lg font-bold">Personal trainer</div>
               <div>Name: {registration?.trainerId.name}</div>
               <div>Phone number: {registration?.trainerId.phoneNum}</div>
             </div>
