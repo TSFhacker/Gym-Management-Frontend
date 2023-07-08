@@ -189,7 +189,7 @@ const Membership = () => {
                               onClick={(e) => {
                                 e.stopPropagation();
                                 navigate(
-                                  `/admin/membership/${membership.membershipId}/edit`
+                                  `/admin/membership/${membership.membershipId}/update`
                                 );
                               }}
                             >

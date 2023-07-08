@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { HiChevronDoubleLeft } from "react-icons/hi";
@@ -69,12 +69,12 @@ const StaffEdit = () => {
             <div className="mx-4">
               <button
                 className="px-4 text-lg uppercase tracking-widest bg-secondary-100rounded-lg drop-shadow-lg"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(`/admin/staff`)}
               >
                 <span className="mr-2 inline-block">
                   {<HiChevronDoubleLeft />}
                 </span>
-                Back to facilities
+                Back to staffs
               </button>
             </div>
             <div className="flex py-8 px-[100px] mt-2 bg-white shadow-lg">
@@ -181,7 +181,7 @@ const StaffEdit = () => {
                             Dob
                           </label>
                           <input
-                            type="text"
+                            type="date"
                             name="dob"
                             id="dob"
                             onChange={formik.handleChange}
@@ -321,12 +321,23 @@ const StaffEdit = () => {
 
                   <div className="grid grid-cols-3 gap-4"></div>
                   <hr />
-                  <button
-                    type="submit"
-                    className="float-right bg-blue-600 text-white py-2 px-5 rounded-md mt-5 hover:bg-blue-500"
-                  >
-                    Update
-                  </button>
+                  <div className="flex items-center mt-5 gap-4 justify-end">
+                    <Link to={`/admin/staff/${id}/detail`}>
+                      <button
+                        type="submit"
+                        style={{ border: "1px solid rgba(0,0,0,0.1)" }}
+                        className="float-right bg-white text-slate-700 py-2 px-5 rounded-md hover:bg-slate-100"
+                      >
+                        Back to detail
+                      </button>
+                    </Link>
+                    <button
+                      type="submit"
+                      className="float-right bg-blue-600 text-white py-2 px-5 rounded-md hover:bg-blue-500 mt-0"
+                    >
+                      Update
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
