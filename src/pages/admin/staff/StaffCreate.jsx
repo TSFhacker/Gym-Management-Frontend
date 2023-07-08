@@ -64,7 +64,7 @@ const StaffCreate = () => {
                 <span className="mr-2 inline-block">
                   {<HiChevronDoubleLeft />}
                 </span>
-                Back to facilities
+                Back to staffs
               </button>
             </div>
             <div className="flex py-8 px-[100px] mt-2 bg-white shadow-lg">
@@ -171,7 +171,7 @@ const StaffCreate = () => {
                             Dob
                           </label>
                           <input
-                            type="text"
+                            type="date"
                             name="dob"
                             id="dob"
                             onChange={formik.handleChange}

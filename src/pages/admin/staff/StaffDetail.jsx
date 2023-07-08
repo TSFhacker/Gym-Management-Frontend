@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { HiChevronDoubleLeft } from "react-icons/hi";
+import { HiPencilSquare } from "react-icons/hi2"
 import api from "../../../utils/api";
 import swal from "sweetalert";
 
@@ -23,13 +24,13 @@ const StaffDetail = () => {
   const formik = useFormik({
     initialValues: {
       name: staff.name,
-      dob: staff.dob,
+      dob: staff.dob?.slice(0,10),
       address: staff.address,
       phoneNum: staff.phoneNum,
       citizenIdentityID: staff.citizenIdentityID,
-      startDate: staff.startDate,
+      startDate: staff.startDate?.slice(0,10),
       role: staff.role,
-      finishContractDate: staff.finishContractDate,
+      finishContractDate: staff.finishContractDate?.slice(0,10),
       workingFaculty: staff.workingFaculty,
     },
     validationSchema: Yup.object({
@@ -70,12 +71,12 @@ const StaffDetail = () => {
             <div className="mx-4">
               <button
                 className="px-4 text-lg uppercase tracking-widest bg-secondary-100rounded-lg drop-shadow-lg"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate("/admin/staff")}
               >
                 <span className="mr-2 inline-block">
                   {<HiChevronDoubleLeft />}
                 </span>
-                Back to facilities
+                Back to staffs
               </button>
             </div>
             <div className="flex py-8 px-[100px] mt-2 bg-white shadow-lg">
@@ -199,7 +200,7 @@ const StaffDetail = () => {
                           </label>
                           <input
                             disabled
-                            type="text"
+                            type="date"
                             name="dob"
                             id="dob"
                             onChange={formik.handleChange}
@@ -372,12 +373,12 @@ const StaffDetail = () => {
 
                   <div className="grid grid-cols-3 gap-4"></div>
                   <hr />
-                  <button
-                    type="submit"
-                    className="float-right bg-blue-600 text-white py-2 px-5 rounded-md mt-5 hover:bg-blue-500"
-                  >
-                    Update
-                  </button>
+                  <Link to={`/admin/staff/${id}/update`}>
+                    <button className="flex items-center  gap-1 float-right bg-blue-600 text-white py-2 px-3 rounded-md mt-5 hover:bg-blue-500">
+                      <HiPencilSquare />
+                      Edit
+                    </button>
+                  </Link>
                 </form>
               </div>
             </div>

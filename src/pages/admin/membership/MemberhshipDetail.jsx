@@ -343,7 +343,7 @@ const MemberhshipDetail = () => {
                   </div>
                 </form>
               </div>
-              <Link to={`/admin/membership/${id}/edit`}>
+              <Link to={`/admin/membership/${id}/update`}>
                 <button className="flex items-center  gap-1 float-right bg-blue-600 text-white py-2 px-3 rounded-md mt-5 hover:bg-blue-500">
                   <HiPencilSquare />
                   Edit

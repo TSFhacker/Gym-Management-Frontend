@@ -49,8 +49,8 @@ const Staff = () => {
         if (res.status === 200) {
           setStaffs(res.data);
           setSearchStaff(res.data);
-          if (res.data.length > 10) {
-            setPaginated(res.data.slice(0, 10));
+          if (res.data.length > 12) {
+            setPaginated(res.data.slice(0, 12));
           } else {
             setPaginated(res.data);
           }
@@ -81,11 +81,11 @@ const Staff = () => {
                 icon: "success",
               });
               const newStaffs = [...staffs];
-              newStaffs.splice((currentPage - 1) * 7 + index, 1);
+              newStaffs.splice((currentPage - 1) * 12 + index, 1);
               setStaffs(newStaffs);
               setSearchStaff(newStaffs);
               if (newStaffs.length > 10) {
-                setPaginated(newStaffs.slice((currentPage - 1) * 10, currentPage * 10));
+                setPaginated(newStaffs.slice((currentPage - 1) * 12, currentPage * 12));
               } else {
                 setPaginated(newStaffs);
               }
@@ -175,10 +175,10 @@ const Staff = () => {
             {paginated.length === 0 && <NotFound />}
           </div>
           <div className="text-center py-4">
-            {searchStaff.length > 10 && (
+            {searchStaff.length > 12 && (
               <Pagination
                 current={currentPage}
-                total={Math.floor(staffs.length / 10 + 1) * 10}
+                total={Math.floor(staffs.length / 12 + 1) * 10}
                 onChange={handleChangePage}
               />
             )}
