@@ -22,13 +22,13 @@ const StaffEdit = () => {
   const formik = useFormik({
     initialValues: {
       name: staff.name,
-      dob: staff.dob,
+      dob: staff.dob?.slice(0,10),
       address: staff.address,
       phoneNum: staff.phoneNum,
       citizenIdentityID: staff.citizenIdentityID,
-      startDate: staff.startDate,
+      startDate: staff.startDate?.slice(0,10),
       role: staff.role,
-      finishContractDate: staff.finishContractDate,
+      finishContractDate: staff.finishContractDate?.slice(0,10),
       workingFaculty: staff.workingFaculty,
     },
     validationSchema: Yup.object({
