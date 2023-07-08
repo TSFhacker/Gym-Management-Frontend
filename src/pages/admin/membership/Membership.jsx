@@ -15,7 +15,7 @@ const Membership = () => {
   const [paginated, setPaginated] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { pathname } = useLocation();
-  const [searchMemberships, setSearchMemberships] = useState([])
+  const [searchMemberships, setSearchMemberships] = useState([]);
 
   const navigate = useNavigate();
   const role = pathname.split("/")[1];
@@ -25,29 +25,32 @@ const Membership = () => {
   };
 
   const searchHandler = (e) => {
-    const searchValue = e.target.value
+    const searchValue = e.target.value;
     const foundMemberships = memberships.filter((membership) =>
-    membership.membershipName?.toLowerCase().includes(searchValue.toLowerCase())
+      membership.membershipName
+        ?.toLowerCase()
+        .includes(searchValue.toLowerCase())
     );
-    setSearchMemberships(foundMemberships)
-    if(foundMemberships.length > 10) {
-      setPaginated(foundMemberships.slice(0,10))
+    setSearchMemberships(foundMemberships);
+    if (foundMemberships.length > 10) {
+      setPaginated(foundMemberships.slice(0, 10));
     } else {
-      setPaginated(foundMemberships)
+      setPaginated(foundMemberships);
     }
-  }
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounceSearchHandler = useCallback(
-    debounce(searchHandler, 300)
-  , [memberships])
+  const debounceSearchHandler = useCallback(debounce(searchHandler, 300), [
+    memberships,
+  ]);
 
   useEffect(() => {
-    api.get("/api/memberships")
+    api
+      .get("/api/memberships")
       .then((res) => {
         if (res.status === 200) {
           setMemberships(res.data);
-          setSearchMemberships(res.data)
+          setSearchMemberships(res.data);
           if (res.data.length > 10) {
             setPaginated(res.data.slice(0, 10));
           } else {
@@ -81,7 +84,8 @@ const Membership = () => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        api.delete(`/api/memberships/${id}`)
+        api
+          .delete(`/api/memberships/${id}`)
           .then((res) => {
             if (res.status === 200) {
               swal("Poof! Membership has been deleted!", {
@@ -89,8 +93,16 @@ const Membership = () => {
                 timer: 1000,
               });
               const newMemberships = [...memberships];
-              newMemberships.splice(index, 1);
+              newMemberships.splice((currentPage - 1) * 10 + index, 1);
               setMemberships(newMemberships);
+              setSearchMemberships(newMemberships);
+              if (newMemberships.length > 10) {
+                setPaginated(
+                  newMemberships.slice((currentPage - 1) * 10, currentPage * 10)
+                );
+              } else {
+                setPaginated(newMemberships);
+              }
             }
           })
           .catch((error) => {});
@@ -100,7 +112,7 @@ const Membership = () => {
   return (
     <div className="w-full flex h-full">
       <div className="w-full bg-gray-100">
-      <div className="flex items-center justify-between m-4 px-8 py-4 bg-white drop-shadow-lg">
+        <div className="flex items-center justify-between m-4 px-8 py-4 bg-white drop-shadow-lg">
           <h2 className="uppercase text-2xl tracking-widest font-semibold">
             Membership
           </h2>
@@ -127,72 +139,73 @@ const Membership = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginated.length > 0 && paginated?.map((membership, index) => (
-                  <tr
-                    key={membership.membershipId}
-                    className="cursor-pointer bg-[#fafafa] hover:bg-gray-100 text-center"
-                    style={{ border: "1px solid rgba(0,0,0,0.1)" }}
-                    onClick={() =>
-                      navigate(
-                        `/admin/membership/${membership.membershipId}/detail`
-                      )
-                    }
-                  >
-                    <td className="p-[15px]">{membership.membershipId}</td>
-                    <td className="p-[15px] font-semibold">
-                      {membership.membershipName}
-                    </td>
-                    <td className="p-[15px] text-center text-gray-800">
-                      {membership.trainingTime}
-                    </td>
-                    <td className="p-[15px] text-gray-800">
-                      {membership.price}$
-                    </td>
-                    <td className="p-[15px] text-gray-800">
-                      {membership.pricePerMonth}$
-                    </td>
-                    <td className="p-[15px] text-gray-800">
-                      {membership.pricePerDay}$
-                    </td>
-                    <td className="p-[15px] text-gray-800">
-                      {membership.trainingClass}
-                    </td>
-                    {role === "admin" && (
-                      <td className="p-[15px]">
-                        <div className="flex gap-2 items-center justify-center">
-                          <div
-                            className="bg-red-600  cursor-pointer p-[8px] inline-block rounded"
-                            onClick={(e) =>
-                              handleDelete(e, membership.membershipId, index)
-                            }
-                          >
-                            <FiTrash2
-                              className="text-white cursor-pointer"
-                              size={14}
-                            />
-                          </div>
-                          <div
-                            className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(
-                                `/admin/membership/${membership.membershipId}/edit`
-                              );
-                            }}
-                          >
-                            <FiEdit
-                              className="text-white cursor-pointer"
-                              size={14}
-                            />
-                          </div>
-                        </div>
+                {paginated.length > 0 &&
+                  paginated?.map((membership, index) => (
+                    <tr
+                      key={membership.membershipId}
+                      className="cursor-pointer bg-[#fafafa] hover:bg-gray-100 text-center"
+                      style={{ border: "1px solid rgba(0,0,0,0.1)" }}
+                      onClick={() =>
+                        navigate(
+                          `/admin/membership/${membership.membershipId}/detail`
+                        )
+                      }
+                    >
+                      <td className="p-[15px]">{membership.membershipId}</td>
+                      <td className="p-[15px] font-semibold">
+                        {membership.membershipName}
                       </td>
-                    )}
-                  </tr>
-                ))}
+                      <td className="p-[15px] text-center text-gray-800">
+                        {membership.trainingTime}
+                      </td>
+                      <td className="p-[15px] text-gray-800">
+                        {membership.price}$
+                      </td>
+                      <td className="p-[15px] text-gray-800">
+                        {membership.pricePerMonth}$
+                      </td>
+                      <td className="p-[15px] text-gray-800">
+                        {membership.pricePerDay}$
+                      </td>
+                      <td className="p-[15px] text-gray-800">
+                        {membership.trainingClass}
+                      </td>
+                      {role === "admin" && (
+                        <td className="p-[15px]">
+                          <div className="flex gap-2 items-center justify-center">
+                            <div
+                              className="bg-red-600  cursor-pointer p-[8px] inline-block rounded"
+                              onClick={(e) =>
+                                handleDelete(e, membership.membershipId, index)
+                              }
+                            >
+                              <FiTrash2
+                                className="text-white cursor-pointer"
+                                size={14}
+                              />
+                            </div>
+                            <div
+                              className="bg-blue-600  cursor-pointer p-[8px] inline-block rounded"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(
+                                  `/admin/membership/${membership.membershipId}/edit`
+                                );
+                              }}
+                            >
+                              <FiEdit
+                                className="text-white cursor-pointer"
+                                size={14}
+                              />
+                            </div>
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
               </tbody>
             </table>
-            {paginated.length === 0 && (<NotFound />)}
+            {paginated.length === 0 && <NotFound />}
           </div>
           <div className="text-center py-4">
             {searchMemberships.length > 10 && (

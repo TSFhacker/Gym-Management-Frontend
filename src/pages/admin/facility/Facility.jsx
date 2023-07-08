@@ -66,7 +66,7 @@ const Facility = () => {
     "Action",
   ];
 
-  const handleDelete = (id) => {
+  const handleDelete = (id, index) => {
     swal({
       title: "Are you sure?",
       text: "You can't undo this action",
@@ -75,13 +75,22 @@ const Facility = () => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        axios
-          .delete(`http://localhost:8080/api/v1/facility/delete?id=${id}`)
+        axios.delete(`http://localhost:8080/api/v1/facility/delete?id=${id}`)
           .then((res) => {
             if (res.status === 200) {
               swal("Poof! Facility has been deleted!", {
                 icon: "success",
+                timer: 1000
               });
+              const newFacilities = [...facilities];
+              newFacilities.splice((currentPage - 1) * 10 + index, 1);
+              setFacilities(newFacilities);
+              setSearchFacilities(newFacilities);
+              if (newFacilities.length > 10) {
+                setPaginated(newFacilities.slice((currentPage - 1) * 10, currentPage * 10));
+              } else {
+                setPaginated(newFacilities);
+              }
             }
           })
           .catch((error) => {});
@@ -118,7 +127,7 @@ const Facility = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginated.length > 0 && paginated?.map((product) => (
+                {paginated.length > 0 && paginated?.map((product, index) => (
                   <tr
                     key={product.id}
                     className="cursor-pointer bg-[#fafafa] hover:bg-gray-100"
@@ -155,7 +164,7 @@ const Facility = () => {
                       <div className="flex gap-2 items-center">
                         <div
                           className="bg-red-600  cursor-pointer p-[8px] inline-block rounded"
-                          onClick={() => handleDelete(product.id)}
+                          onClick={() => handleDelete(product.id, index)}
                         >
                           <FiTrash2
                             className="text-white cursor-pointer"

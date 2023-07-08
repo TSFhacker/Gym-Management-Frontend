@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -9,16 +9,17 @@ import swal from "sweetalert";
 const GymCreate = () => {
   const navigate = useNavigate();
   const [members, setMembers] = useState([]);
-  
+
   useEffect(() => {
-    api.get("/api/v1/gymstaff")
-      .then(res => {
-        if(res.status === 200){
-          setMembers(res.data)
+    api
+      .get("/api/v1/gymstaff")
+      .then((res) => {
+        if (res.status === 200) {
+          setMembers(res.data);
         }
       })
-      .catch(error => {})
-  },[])
+      .catch((error) => {});
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -40,27 +41,42 @@ const GymCreate = () => {
     enableReinitialize: true,
 
     onSubmit: async (values) => {
-      const data = {...values, employee: {id: values.employee}}
-      api.post("/api/v1/yogaclass/add", data).then((res) => {
-        if (res.status === 200) {
-          swal({
-            title: "Success!",
-            timer: 2000,
-            text: "Gym created successfully!",
-            icon: "success",
-            buttons: false,
-          }).then(() => {
-            navigate("/admin/gym");
-          });
-        }
-      });
+      const data = {...values};
+      delete data.employee;
+      api.post("/api/v1/yogaclass/add", data)
+        .then((res) => {
+          if (res.status === 200) {
+            const data2 = {
+              gymStaff: {
+                id: values.employee,
+              },
+              yogaClass: {
+                id: values.id,
+              },
+            };
+            api.post("/api/v1/classManager/add", data2).then((res) => {
+              if (res.status === 200) {
+                swal({
+                  title: "Success!",
+                  timer: 2000,
+                  text: "Gym created successfully!",
+                  icon: "success",
+                  buttons: false,
+                }).then(() => {
+                  navigate("/admin/gym");
+                });
+              }
+            });
+          }
+        })
+        .catch((error) => {});
     },
   });
 
   return (
     <div className="w-full flex h-full">
       <div className="w-full bg-gray-100">
-          <div className="px-[50px] mt-[20px]">
+        <div className="px-[50px] mt-[20px]">
           <div>
             <div className="mx-4">
               <button
@@ -139,7 +155,9 @@ const GymCreate = () => {
                       >
                         <option>Select employee</option>
                         {members.map((member) => (
-                          <option key={member.id} value={member.id}>{member.name}</option>
+                          <option key={member.id} value={member.id}>
+                            {member.name}
+                          </option>
                         ))}
                       </select>
                       {formik.touched.employee && formik.errors.employee && (
@@ -164,11 +182,12 @@ const GymCreate = () => {
                         value={formik.values.maximumNumber}
                         className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       ></input>
-                      {formik.touched.maximumNumber && formik.errors.maximumNumber && (
-                        <p className="text-xs font-semibold text-red-500">
-                          {formik.errors.maximumNumber}
-                        </p>
-                      )}
+                      {formik.touched.maximumNumber &&
+                        formik.errors.maximumNumber && (
+                          <p className="text-xs font-semibold text-red-500">
+                            {formik.errors.maximumNumber}
+                          </p>
+                        )}
                     </div>
                     <div className="flex flex-col space-y-1">
                       <label
@@ -211,11 +230,12 @@ const GymCreate = () => {
                         <option value={true}>Occupied</option>
                         <option value={false}>No Occupied</option>
                       </select>
-                      {formik.touched.isOccupied && formik.errors.isOccupied && (
-                        <p className="text-xs font-semibold text-red-500">
-                          {formik.errors.isOccupied}
-                        </p>
-                      )}
+                      {formik.touched.isOccupied &&
+                        formik.errors.isOccupied && (
+                          <p className="text-xs font-semibold text-red-500">
+                            {formik.errors.isOccupied}
+                          </p>
+                        )}
                     </div>
                   </div>
                   <hr />
