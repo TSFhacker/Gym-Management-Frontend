@@ -14,83 +14,21 @@ import TheSpinner from "../../layout/TheSpinner";
 import { useParams } from "react-router-dom";
 
 const MemberRegistration = () => {
-  const [memberships, setMemberships] = useState([]);
   const [registration, setRegistration] = useState(null);
-  const [trainers, setTrainers] = useState([]);
-  const [reload, setReload] = useState(false);
+  const [histories, setHistories] = useState([]);
 
   const [select, setSelect] = useState(null);
   const userId = useSelector((state) => state.auth.id);
 
   useEffect(() => {
-    api.get("api/memberships").then((res) => setMemberships(res.data));
-    api.get("api/v1/trainer").then((res) => setTrainers(res.data));
-    api.get("api/registrations").then((res) => {
+    api.get("/api/registrations").then(({ data }) => {
+      const filtered = data?.filter((his) => his.memberId.memberId === userId);
+      setHistories(filtered);
       setRegistration(
-        res.data.findLast((item) => item.memberId.memberId === userId)
+        data.findLast((item) => item.memberId.memberId === userId)
       );
     });
-  }, [reload]);
-
-  const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
-  const loading = useSelector((state) => state.ui.addPrductLoading);
-
-  const [tnail, setTnail] = useState("");
-  const [pImages, setPImages] = useState("");
-
-  const { product } = useParams();
-
-  const thumbnailHandler = (file) => {
-    console.log("thumbnail: ", file);
-    setTnail(file);
-  };
-
-  const imagesHandler = (event) => {
-    const imageArray = [];
-    for (let i = 0; i < event.target.files.length; i++) {
-      imageArray.push(event.target.files[i]);
-    }
-    setPImages(imageArray);
-  };
-
-  const initialValues = {
-    trainingClass: "",
-    trainer: "",
-    type: "",
-  };
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema: Yup.object({
-      trainingClass: Yup.string().required("Required"),
-      type: Yup.string().required("Required"),
-    }),
-    onSubmit: async (values) => {
-      try {
-        console.log(values);
-        const post = {
-          registrationDate: new Date().toISOString(),
-          registrationType: values.type,
-          memberId: { memberId: Number(userId) },
-          membershipId: { membershipId: Number(values.trainingClass) },
-          trainerId: { id: 1 },
-        };
-        if (values.trainer) post.trainerId = { id: Number(values.trainer) };
-
-        await api.post("api/registrations", post);
-        formik.resetForm(initialValues);
-        swal({
-          title: "Successful!",
-          icon: "success",
-          button: "OK!",
-        });
-        setReload((prev) => !prev);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
+  }, []);
 
   // const onDrop = useCallback((acceptedFiles) => {
   //   if (acceptedFiles.length !== 4) {
@@ -100,10 +38,6 @@ const MemberRegistration = () => {
   // }, [formik])
 
   // const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
-
-  const handleChange = (e) => {
-    setSelect(memberships.find((mem) => mem.membershipId == e.target.value));
-  };
 
   return (
     <div>
@@ -154,111 +88,38 @@ const MemberRegistration = () => {
         </div>
       </div>
       <div className="flex flex-col p-8 m-4 bg-white shadow-lg">
-        <div className="mb-5 text-xl font-bold">Change membership</div>
-        <div className="w-3/4">
-          <form onSubmit={formik.handleSubmit}>
-            {/* name input */}
-            <div className="flex flex-col mb-8 space-y-1">
-              <label htmlFor="feedback_content" className="tracking-wider">
-                Training class:
-              </label>
-              <select
-                name="trainingClass"
-                id="trainingClass"
-                onChange={(e) => {
-                  formik.handleChange(e);
-                  handleChange(e);
-                }}
-                onBlur={formik.handleBlur}
-                value={formik.values.trainingClass}
-                className="bg-gray-100 form-select"
-              >
-                <option value="">Choose a training class</option>
-                {memberships?.map((member) => (
-                  <option key={member.membershipId} value={member.membershipId}>
-                    {member.trainingClass}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.trainingClass && formik.errors.trainingClass && (
-                <p className="text-xs font-semibold text-red-500">
-                  {formik.errors.trainingClass}
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col mb-8 space-y-1">
-              <label htmlFor="feedback_content" className="tracking-wider">
-                Registration type:
-              </label>
-              <select
-                name="type"
-                id="type"
-                onChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                onBlur={formik.handleBlur}
-                value={formik.values.type}
-                className="bg-gray-100 form-select"
-              >
-                <option value="">Choose a registraion type</option>
-                <option value="hourly">Hourly</option>
-                <option value="monthly">Monthy</option>
-              </select>
-              {formik.touched.type && formik.errors.type && (
-                <p className="text-xs font-semibold text-red-500">
-                  {formik.errors.type}
-                </p>
-              )}
-            </div>
-            {select && (
-              <>
-                <div>
-                  <div>Class info</div>
-                  <div>Price: {select.price}$</div>
-                  <div>Type: {select.trainingCardType}</div>
-                  <div>Number of sessions: {select.numberOfSession}</div>
-                </div>
-                {select.includingTrainer && (
-                  <div className="flex flex-col mb-8 space-y-1">
-                    <label
-                      htmlFor="feedback_content"
-                      className="tracking-wider"
-                    >
-                      Select personal trainer:
-                    </label>
-                    <select
-                      name="trainer"
-                      id="trainer"
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                      }}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.trainer}
-                      className="bg-gray-100 form-select"
-                    >
-                      {trainers?.map((trainer) => (
-                        <option key={trainer.id} value={trainer.id}>
-                          {trainer.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+        <div className="font-bold text-lg">Membership history</div>
+        {histories?.map((his) => (
+          <div className="bg-white mx-4 p-8 shadow-lg space-y-12">
+            <div className="flex space-x-6 border border-white rounded-lg shadow-lg p-4 items-center">
+              <div className="overflow-hidden cursor-pointer">
+                <img
+                  className="w-[300px] h-[200px] object-contain rounded transform hover:scale-105 transition-all duration-300"
+                  src={
+                    "https://levelfyc.com/wp-content/uploads/2021/09/lou-3803.jpg"
+                  }
+                  alt=""
+                />
+              </div>
+              <div className="flex flex-col">
+                <h2 className="font-semibold text-lg tracking-widest my-4">
+                  {his.membershipId?.trainingClass}
+                </h2>
+                <span className="block text-secondary-100 font-bold text-sm">
+                  Price: {his.membershipId?.price}
+                </span>
+                <span className="block text-secondary-100 font-bold text-sm">
+                  Type: {his.membershipId?.trainingCardType}
+                </span>
+                {his.membershipId?.includingTrainer && (
+                  <span className="block text-secondary-100 font-bold text-sm">
+                    Including personal trainer
+                  </span>
                 )}
-              </>
-            )}
-            <hr />
-            {loading ? (
-              <TheSpinner />
-            ) : (
-              <button
-                type="submit"
-                className="block px-4 py-2 mt-3 ml-auto border rounded-md text-primary border-primary hover:text-white hover:bg-blue-600"
-              >
-                Register
-              </button>
-            )}
-          </form>
-        </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

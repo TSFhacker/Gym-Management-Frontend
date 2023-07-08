@@ -14,16 +14,11 @@ import { useEffect, useState } from "react";
 const MembershipHistory = (props) => {
   const [histories, setHistories] = useState([]);
   console.log(histories);
-
-  const userId = useSelector((state) => state.auth.id);
-
-  const { pathname } = useLocation();
-  const product = "membership history";
+  const product = "memberships";
 
   useEffect(() => {
-    api.get("/api/registrations").then(({ data }) => {
-      const filtered = data?.filter((his) => his.memberId.memberId === userId);
-      setHistories(filtered);
+    api.get("/api/memberships").then(({ data }) => {
+      setHistories(data);
     });
   }, []);
 
@@ -58,32 +53,25 @@ const MembershipHistory = (props) => {
             </div>
             <div className="flex flex-col">
               <h2 className="font-semibold text-lg tracking-widest my-4">
-                {his.membershipId?.trainingClass}
+                {his.trainingClass}
               </h2>
               <span className="block text-secondary-100 font-bold text-sm">
-                Price: {his.membershipId?.price}
+                Price: {his.price}$
               </span>
               <span className="block text-secondary-100 font-bold text-sm">
-                Type: {his.membershipId?.trainingCardType}
+                Type: {his.trainingCardType}
               </span>
-              {his.membershipId?.includingTrainer && (
+              <span className="block text-secondary-100 font-bold text-sm">
+                Training time: {his.trainingTime}
+              </span>
+              <span className="block text-secondary-100 font-bold text-sm">
+                Number of sessions: {his.numberOfSession}
+              </span>
+              {his?.includingTrainer && (
                 <span className="block text-secondary-100 font-bold text-sm">
                   Including personal trainer
                 </span>
               )}
-              {/* <p className="text-gray-500 mt-6">Name...</p>
-              <Link
-                className="ml-auto mt-auto bg-orange-400 text-white px-4 py-1 rounded-md shadow-md hover:bg-orange-500 transition-all duration-200 transform active:scale-95"
-                to={`/${role}/update${product}/id`}
-              >
-                <AiFillEdit />
-              </Link>
-              <Link
-                className="ml-auto mt-auto bg-red-600 text-white px-4 py-1 rounded-md shadow-md hover:bg-red-700 transition-all duration-200 transform active:scale-95"
-                to={`/admin/dashboard/updateproducts/1`}
-              >
-                <BsTrashFill />
-              </Link> */}
             </div>
           </div>
         </div>
