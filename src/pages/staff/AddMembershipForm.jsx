@@ -4,17 +4,33 @@ import { useParams } from "react-router-dom";
 
 const AddMembershipForm = ({
   setOpenModal,
-  setUpdatedMemberId,
   updatedMemberId,
+  updatedRegistration,
+  setHistories,
+  histories,
 }) => {
   const [membershipList, setMembershipList] = useState([]);
-  const [membershipName, setMembershipName] = useState("");
-  const [membershipId, setMembershipId] = useState(0);
-  const [registrationDate, setRegistrationDate] = useState(new Date());
-  const [registrationType, setRegistrationType] = useState("");
+  const [membershipName, setMembershipName] = useState(
+    updatedRegistration ? updatedRegistration.membershipId.membershipName : ""
+  );
+  const [membershipId, setMembershipId] = useState(
+    updatedRegistration ? updatedRegistration.membershipId.membershipId : 0
+  );
+  const [registrationDate, setRegistrationDate] = useState(
+    updatedRegistration
+      ? new Date(updatedRegistration.registrationDate)
+      : new Date()
+  );
+  const [registrationType, setRegistrationType] = useState(
+    updatedRegistration ? updatedRegistration.registrationType : ""
+  );
   const [trainerList, setTrainerList] = useState([]);
-  const [trainerId, setTrainerId] = useState("");
-  const [trainerName, setTrainerName] = useState("");
+  const [trainerId, setTrainerId] = useState(
+    updatedRegistration ? updatedRegistration.trainerId.id : ""
+  );
+  const [trainerName, setTrainerName] = useState(
+    updatedRegistration ? updatedRegistration.trainerId.name : ""
+  );
   const [showCalendar, setShowCalendar] = useState(false);
   const [visibility, setVisibility] = useState("hidden");
   const [showListTrainer, setShowListTrainer] = useState("hidden");
@@ -42,7 +58,8 @@ const AddMembershipForm = ({
   const handleSubmit = (e) => {
     if (membershipId && registrationDate && registrationType && trainerId) {
       e.preventDefault();
-      const newMember = {
+      console.log("updating");
+      const newRegistration = {
         memberId: {
           memberId: updatedMemberId,
         },
@@ -55,17 +72,30 @@ const AddMembershipForm = ({
           id: trainerId,
         },
       };
-      fetch(`http://localhost:8080/api/registrations`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newMember),
-      })
+      fetch(
+        `http://localhost:8080/api/registrations${
+          updatedRegistration ? "/" + updatedRegistration.registrationId : ""
+        }`,
+        {
+          method: `${updatedRegistration ? "PUT" : "POST"}`,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newRegistration),
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
         });
 
       setOpenModal(false);
+      // updatedRegistration &&
+      //   setHistories(
+      //     histories.map((e) =>
+      //       e.registrationId === updatedRegistration.registrationId
+      //         ? newRegistration
+      //         : e
+      //     )
+      //   );
     }
   };
   return (
@@ -76,7 +106,6 @@ const AddMembershipForm = ({
             onClick={(e) => {
               e.preventDefault();
               setOpenModal(false);
-              setUpdatedMemberId(0);
             }}
             className="absolute top-8 right-8 text-3xl bg-transparent text-main font-black cursor-pointer border-none"
           >

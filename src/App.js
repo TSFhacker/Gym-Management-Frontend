@@ -63,6 +63,7 @@ const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const isAdmin = useSelector((state) => state.auth.isAdmin);
+  const role = useSelector((state) => state.auth.role);
   // const products = useSelector((state) => state.products.products);
 
   useEffect(() => {
@@ -87,88 +88,79 @@ const App = () => {
             <Route path="/" element={<Login />} />
           </Route>
 
-          <Route>
-            <Route path="admin/" element={<Dashboard />}>
-              <Route path="facility" element={<Facility />} />
-              <Route path="facility/:id/update" element={<FacilityUpdate />} />
-              <Route path="facility/create" element={<FacilityCreate />} />
-              <Route path="membership" element={<Membership />} />
-              <Route path="membership/create" element={<MembershipCreate />} />
-              <Route path="staff" element={<Staff />} />
-              <Route path="staff/create" element={<StaffCreate />} />
-              <Route path="staff/:id/update" element={<StaffEdit />} />
-              <Route path="staff/:id/detail" element={<StaffDetail />} />
-              <Route
-                path="membership/:id/detail"
-                element={<MemberhshipDetail />}
-              />
-              <Route
-                path="membership/:id/update"
-                element={<MemberhshipEdit />}
-              />
-              <Route path="gym" element={<ListGym />} />
-              <Route path="gym/:id/update" element={<GymUpdate />} />
-              <Route path="gym/:id/detail" element={<GymDetail />} />
-              <Route path="gym/create" element={<GymCreate />} />
-              <Route path="member" element={<ListMember />} />
+          {role === "admin" && (
+            <Route>
+              <Route path="admin/" element={<Dashboard />}>
+                <Route path="facility" element={<Facility />} />
+                <Route
+                  path="facility/:id/update"
+                  element={<FacilityUpdate />}
+                />
+                <Route path="facility/create" element={<FacilityCreate />} />
+                <Route path="membership" element={<Membership />} />
+                <Route
+                  path="membership/create"
+                  element={<MembershipCreate />}
+                />
+                <Route path="staff" element={<Staff />} />
+                <Route path="staff/create" element={<StaffCreate />} />
+                <Route path="staff/:id/update" element={<StaffEdit />} />
+                <Route path="staff/:id/detail" element={<StaffDetail />} />
+                <Route
+                  path="membership/:id/detail"
+                  element={<MemberhshipDetail />}
+                />
+                <Route
+                  path="membership/:id/update"
+                  element={<MemberhshipEdit />}
+                />
+                <Route path="gym" element={<ListGym />} />
+                <Route path="gym/:id/update" element={<GymUpdate />} />
+                <Route path="gym/:id/detail" element={<GymDetail />} />
+                <Route path="gym/create" element={<GymCreate />} />
+                <Route path="member" element={<ListMember />} />
+                <Route path="member/:id" element={<MemberRegistration />} />
+              </Route>
             </Route>
-          </Route>
-          <Route path="trainer" element={<ListTrainee />} />
+          )}
 
-          <Route>
-            <Route path="staff" element={<Dashboard />}>
-              <Route path="member" element={<ListMember />} />
-              <Route path="member/:id" element={<MemberRegistration />} />
-              <Route path="membership" element={<Membership />} />
-              <Route
-                path="membership/:id/detail"
-                element={<MemberhshipDetail />}
-              />
-              <Route path="feedback" element={<ListFeedback />} />
+          {role === "trainer" && (
+            <Route path="trainer" element={<ListTrainee />} />
+          )}
+
+          {role === "staff" && (
+            <Route>
+              <Route path="staff" element={<Dashboard />}>
+                <Route path="member" element={<ListMember />} />
+                <Route path="member/:id" element={<MemberRegistration />} />
+                <Route path="membership" element={<Membership />} />
+                <Route
+                  path="membership/:id/detail"
+                  element={<MemberhshipDetail />}
+                />
+                <Route path="feedback" element={<ListFeedback />} />
+              </Route>
             </Route>
-          </Route>
+          )}
 
-          <Route>
-            <Route path="member" element={<Dashboard />}>
-              <Route path="history" element={<MemberHistory />} />
-              <Route path="info" element={<MemberInfo />} />
-              <Route path="feedback" element={<MemberFeedback />} />
-              <Route path="feedback/add" element={<AddMemberFeedback />} />
-              <Route path="registration" element={<MemberRegistration />} />
-              <Route path="membership" element={<MembershipHistory />} />
-              {/* <Route path="add:product" element={<AddProduct />} />
+          {role === "member" && (
+            <Route>
+              <Route path="member" element={<Dashboard />}>
+                <Route path="history" element={<MemberHistory />} />
+                <Route path="info" element={<MemberInfo />} />
+                <Route path="feedback" element={<MemberFeedback />} />
+                <Route path="feedback/add" element={<AddMemberFeedback />} />
+                <Route path="registration" element={<MemberRegistration />} />
+                <Route path="membership" element={<MembershipHistory />} />
+                {/* <Route path="add:product" element={<AddProduct />} />
               <Route path=":product" element={<TheProducts />} />
               <Route path="update:product">
                 <Route index element={<UpdateProducts />} />
                 <Route path=":productId" element={<ProductUpdate />} />
               </Route> */}
-            </Route>
-          </Route>
-
-          {/* <Route>
-            {["admin", "staff", "trainer", "member"].map((path) => (
-              <Route path={path} element={<Dashboard />}>
-                <Route path=":product" element={<TheProducts />} />
-                <Route path="add:product" element={<AddProduct />} />
-                <Route path="update:product">
-                  <Route index element={<UpdateProducts />} />
-                  <Route path=":productId" element={<ProductUpdate />} />
-                </Route>
-              </Route>
-            ))}
-          </Route> */}
-
-          {/* <Route>
-            <Route path="staff" element={<Dashboard />}>
-              <Route path="products" element={<TheProducts />} />
-              <Route path="addproduct" element={<AddProduct />} />
-              <Route path="updateproducts">
-                <Route index element={<UpdateProducts />} />
-                <Route path=":productId" element={<ProductUpdate />} />
               </Route>
             </Route>
-          </Route> */}
-
+          )}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>

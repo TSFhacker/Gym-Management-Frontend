@@ -12,15 +12,24 @@ import { useDispatch, useSelector } from "react-redux";
 
 import TheSpinner from "../../layout/TheSpinner";
 import { useParams } from "react-router-dom";
+import { AiFillEdit } from "react-icons/ai";
+import { BsTrashFill } from "react-icons/bs";
+import AddMembershipForm from "../staff/AddMembershipForm";
+import DeletePopup from "../staff/DeletePopup";
 
 const MemberRegistration = () => {
   const [registration, setRegistration] = useState(null);
   const [histories, setHistories] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [openDeletePopup, setOpenDeletePopup] = useState(false);
+  const [updatedRegistrationId, setUpdatedRegistrationId] = useState(0);
+  const [deletedRegistrationId, setDeletedRegistrationId] = useState(0);
 
   const [select, setSelect] = useState(null);
   const { id } = useParams();
   const user_id = useSelector((state) => state.auth.id);
   const userId = id ? parseInt(id) : user_id;
+  const role = useSelector((state) => state.auth.role);
 
   useEffect(() => {
     api.get("/api/registrations").then(({ data }) => {
@@ -116,10 +125,52 @@ const MemberRegistration = () => {
                     Including personal trainer
                   </span>
                 )}
+                {role === "staff" ||
+                  (role === "admin" && (
+                    <span className="block text-secondary-100 font-bold text-sm flex gap-2 mt-2">
+                      <button
+                        className="bg-orange-400 text-white px-4 py-1 rounded-md shadow-md hover:bg-orange-500 transition-all duration-200 transform active:scale-95"
+                        onClick={(e) => {
+                          setOpenModal(true);
+                          setUpdatedRegistrationId(his.registrationId);
+                        }}
+                      >
+                        <AiFillEdit className="inline-block" />
+                      </button>
+                      <button
+                        className="bg-red-600 text-white px-4 py-1 rounded-md shadow-md hover:bg-red-700 transition-all duration-200 transform active:scale-95"
+                        onClick={() => {
+                          setOpenDeletePopup(true);
+                          setDeletedRegistrationId(his.registrationId);
+                        }}
+                      >
+                        <BsTrashFill className="inline-block" />
+                      </button>
+                    </span>
+                  ))}
               </div>
             </div>
           </div>
         ))}
+        {openModal && (
+          <AddMembershipForm
+            setOpenModal={setOpenModal}
+            updatedRegistration={histories.find(
+              (e) => e.registrationId === updatedRegistrationId
+            )}
+            setHistories={setHistories}
+            histories={histories}
+          />
+        )}
+
+        {openDeletePopup && (
+          <DeletePopup
+            setOpenDeletePopup={setOpenDeletePopup}
+            histories={histories}
+            setHistories={setHistories}
+            deletedRegistrationId={deletedRegistrationId}
+          />
+        )}
       </div>
     </div>
   );
